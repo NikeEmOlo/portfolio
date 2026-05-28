@@ -1,114 +1,98 @@
 ---
 import '../styles/global.css'
-import { Font } from "astro:assets"
+import Base from '../layouts/Base.astro'
 import { projects } from '../data/projects'
 import Navigation from '../components/Navigation.astro'
 import TarotCard from '../components/tarotCard/TarotCard.astro'
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <Font cssVariable='--david'></Font>
-    <title>Olanike Olowo-Fela</title>
-  </head>
-
-  <body>
-    <main>
-      <Navigation />
-      <section aria-labelledby="projects-heading">
-        <h2 id="projects-heading" class="visually-hidden">Projects</h2>
-        <ul 
-          class="cards-row" 
-          role="list" 
-          data-active-category="dev" 
-          style={`--card-count: ${projects.length}`}>
-          {projects.map((project, index) => (
-            <li 
-              data-category={project.category}
-              style={`--index: ${index}`}
-            >
-              <TarotCard
-                numeral={project.numeral}
-                icon={project.icon}
-              />
-            </li>
-          ))}
-        </ul>
-      </section>
-    </main>
-  </body>
-
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      overflow-x: clip;
-      padding: 0;
-    }
-    main {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      min-height: 100dvh;
-    }
-
-    /*
-     * --Pb: pivot distance below the card bottom = horizontal semi-axis.
-     * --b:  vertical semi-axis; b < Pb flattens the arc.
-     * tx-b/ty-b place the card BOTTOM CENTRE on the ellipse; tx/ty then
-     * back-calculate the card CENTRE by subtracting the rotated half-height.
-     */
-    .cards-row {
-      list-style: none;
-      padding: 0;
-      margin: 0 auto;
-      position: relative;
-      width: clamp(140px, 7.5vw, 260px);
-      height: clamp(235px, 12.5vw, 435px);
-      --step-angle: 22deg;
-      --Pb: 700px;
-      --b: 280px;
-    }
-
-    @media (max-width: 1024px) {
+  <Base>
+    <body>
+      <main>
+        <Navigation />
+        <section aria-labelledby="projects-heading">
+          <h2 id="projects-heading" class="visually-hidden">Projects</h2>
+          <ul
+            class="cards-row"
+            role="list"
+            data-active-category="dev"
+            style={`--card-count: ${projects.length}`}>
+            {projects.map((project, index) => (
+              <li
+                data-category={project.category}
+                style={`--index: ${index}`}
+              >
+                <TarotCard
+                  numeral={project.numeral}
+                  icon={project.icon}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      </main>
+    </body>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        overflow-x: clip;
+        padding: 0;
+      }
+      main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        min-height: 100dvh;
+      }
+      /*
+       * --Pb: pivot distance below the card bottom = horizontal semi-axis.
+       * --b:  vertical semi-axis; b < Pb flattens the arc.
+       * tx-b/ty-b place the card BOTTOM CENTRE on the ellipse; tx/ty then
+       * back-calculate the card CENTRE by subtracting the rotated half-height.
+       */
       .cards-row {
-        --step-angle: 11deg;
-        --Pb: 280px;
-        --b: 100px;
+        list-style: none;
+        padding: 0;
+        margin: 0 auto;
+        position: relative;
+        width: clamp(140px, 7.5vw, 260px);
+        height: clamp(235px, 12.5vw, 435px);
+        --step-angle: 22deg;
+        --Pb: 700px;
+        --b: 280px;
       }
-    }
-
-    .cards-row li {
-      position: absolute;
-      top: 0;
-      left: 0;
-      --n: calc(var(--index) - (var(--card-count) - 1) / 2);
-      --arc-angle: calc(var(--n) * var(--step-angle));
-      --tx-b: calc(var(--Pb) * sin(var(--arc-angle)));
-      --ty-b: calc(var(--b) * (1 - cos(var(--arc-angle))));
-      --theta: atan2(var(--tx-b), calc(var(--Pb) - var(--ty-b)));
-      --tx: calc(var(--tx-b) - 117.5px * sin(var(--theta)));
-      --ty: calc(117.5px * (1 - cos(var(--theta))) + var(--ty-b));
-
-      transform: translate(var(--tx), var(--ty)) rotate(var(--theta));
-      transition: transform 0.3s ease;
-      z-index: var(--index);
-    }
-
-    .cards-row li:hover {
-      z-index: 10;
-    }
-
-    @media (max-width: 1024px) {
-      .cards-row li:hover {
+      @media (max-width: 1024px) {
+        .cards-row {
+          --step-angle: 11deg;
+          --Pb: 280px;
+          --b: 100px;
+        }
+      }
+      .cards-row li {
+        position: absolute;
+        top: 0;
+        left: 0;
+        --n: calc(var(--index) - (var(--card-count) - 1) / 2);
+        --arc-angle: calc(var(--n) * var(--step-angle));
+        --tx-b: calc(var(--Pb) * sin(var(--arc-angle)));
+        --ty-b: calc(var(--b) * (1 - cos(var(--arc-angle))));
+        --theta: atan2(var(--tx-b), calc(var(--Pb) - var(--ty-b)));
+        --tx: calc(var(--tx-b) - 117.5px * sin(var(--theta)));
+        --ty: calc(117.5px * (1 - cos(var(--theta))) + var(--ty-b));
+        transform: translate(var(--tx), var(--ty)) rotate(var(--theta));
+        transition: transform 0.3s ease;
         z-index: var(--index);
-        transform: translate(var(--tx), calc(var(--ty) - 30px)) rotate(var(--theta));
       }
-    }
-  </style>
-</html>
+      .cards-row li:hover {
+        z-index: 10;
+      }
+      @media (max-width: 1024px) {
+        .cards-row li:hover {
+          z-index: var(--index);
+          transform: translate(var(--tx), calc(var(--ty) - 30px)) rotate(var(--theta));
+        }
+      }
+    </style>
+  </Base>
