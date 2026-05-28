@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css'
+import { Font } from "astro:assets"
 import { projects } from '../data/projects'
+import Navigation from '../components/Navigation.astro'
 import TarotCard from '../components/tarotCard/TarotCard.astro'
 ---
 <html lang="en">
@@ -9,16 +11,25 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <Font cssVariable='--david'></Font>
     <title>Olanike Olowo-Fela</title>
   </head>
 
   <body>
     <main>
+      <Navigation />
       <section aria-labelledby="projects-heading">
         <h2 id="projects-heading" class="visually-hidden">Projects</h2>
-        <ul class="cards-row" role="list" style={`--card-count: ${projects.length}`}>
+        <ul 
+          class="cards-row" 
+          role="list" 
+          data-active-category="dev" 
+          style={`--card-count: ${projects.length}`}>
           {projects.map((project, index) => (
-            <li style={`--index: ${index}`}>
+            <li 
+              data-category={project.category}
+              style={`--index: ${index}`}
+            >
               <TarotCard
                 numeral={project.numeral}
                 icon={project.icon}
