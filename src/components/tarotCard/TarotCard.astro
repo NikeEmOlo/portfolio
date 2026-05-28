@@ -1,0 +1,65 @@
+---
+import '../../styles/global.css'
+import CrabSVG from './CrabSVG.astro'
+import CardDecor from './TarotCardDecor.astro'
+
+const { numeral, icon } = Astro.props;
+// const numeral = "III";
+// const icon = "crab";
+const icons = {
+    crab: CrabSVG,
+}
+const IconComponent = icons[icon]
+---
+
+<div class="card-main">
+    <div class="card">
+        <CardDecor />
+        <h6 class="numeral">{numeral}</h6>
+        <div class="icon">
+            <IconComponent />
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-main {
+
+        width: clamp(140px, 7.5vw, 260px);
+        height: clamp(235px, 12.5vw, 435px);
+        padding: 3px;
+        background: var(--tarot-gradient);
+        border-radius: 8px;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        min-width: 100%;
+        min-height: 100%;
+        border-radius: 8px;
+        background-color: #080E1C;
+    }
+
+    .numeral {
+        position: absolute;
+        top: 6px;
+        background: var(--tarot-gradient);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        font-size: 20px;
+    }
+    
+    .icon {
+        position: absolute;
+        left: calc(50% - 40.5px);   /* 50% minus half of 81 */
+        top: calc(50% - 16px);      /* 50% minus half of 58 */
+        width: 81px;
+        height: 58px;
+    }
+</style>
+
