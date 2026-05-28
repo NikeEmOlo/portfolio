@@ -18,12 +18,13 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
             style={`--card-count: ${projects.length}`}>
             {projects.map((project, index) => (
               <li
-                data-category={project.category}
+                data-category={project.tab}
                 style={`--index: ${index}`}
               >
                 <TarotCard
                   numeral={project.numeral}
                   icon={project.icon}
+                  label={project.projTitle}
                 />
               </li>
             ))}
@@ -41,10 +42,12 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
       main {
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         width: 100%;
         min-height: 100dvh;
+        padding: 40px;
+        gap: 25vh;
       }
       /*
        * --Pb: pivot distance below the card bottom = horizontal semi-axis.
@@ -85,7 +88,8 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
         transition: transform 0.3s ease;
         z-index: var(--index);
       }
-      .cards-row li:hover {
+      .cards-row li:hover,
+      .cards-row li:focus-within {
         z-index: 10;
       }
       @media (max-width: 1024px) {

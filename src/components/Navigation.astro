@@ -3,6 +3,7 @@ import '../styles/global.css'
 import { projects } from '../data/projects'
 
 const tabs = [...new Set(projects.map((project) => project.tab))]
+const defaultTab = "Development"
 ---
 
 <nav>
@@ -16,16 +17,27 @@ const tabs = [...new Set(projects.map((project) => project.tab))]
     </ul>
 </nav>
 
+<script>
+    document.querySelector("button")?.setAttribute("aria-pressed", "true")
+    const tabButtons = document.querySelectorAll("button")
+    tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            tabButtons.forEach((b) => {
+                b.setAttribute('aria-pressed', b === button ? "true" : "false");
+            })
+        })
+    })
+</script>
+
 <style>
     nav {
         position: relative;
         display: flex;
         align-items: center;
-        width: min(480px, 100%);
-        height: 3rem;
-        border-radius: 20px;
-        padding: 4px 16px;
-        background: transparent;
+        width: fit-content;
+        min-height: 40px;
+        border-radius: 16px;
+        padding: 0 8px;
     }
 
     /* Gradient border via mask: pseudo-element carries the gradient,
@@ -35,7 +47,7 @@ const tabs = [...new Set(projects.map((project) => project.tab))]
         position: absolute;
         inset: 0;
         border-radius: inherit;
-        padding: 1.5px;
+        padding: 2px;
         background: var(--tarot-gradient);
         -webkit-mask:
             linear-gradient(#fff 0 0) content-box,
@@ -50,20 +62,29 @@ const tabs = [...new Set(projects.map((project) => project.tab))]
 
     ul {
         display: flex;
-        justify-content: space-between;
         gap: 0.25rem;
         list-style: none;
-        width: 100%;
         padding: 0;
+        margin: 0;
     }
 
     button {
+        display: flex;
+        align-items: center;
         background: none;
-        padding: 0;
-        margin: 0;
+        padding: 6px 8px;
         border: none;
+        border-radius: 8px;
         color: white;
 
-        font-family: var(--david);
+        font-family: var(--secondary-font);
+        font-size: .85rem;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    button[aria-pressed = "true"] {
+        background: white;
+        color: black;
     }
 </style>

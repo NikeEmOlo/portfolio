@@ -3,14 +3,14 @@ import '../../styles/global.css'
 import CrabSVG from './CrabSVG.astro'
 import CardDecor from './TarotCardDecor.astro'
 
-const { numeral, icon } = Astro.props;
+const { numeral, icon, label } = Astro.props;
 const icons = {
     crab: CrabSVG,
 }
 const IconComponent = icons[icon]
 ---
 
-<div class="card-main">
+<button class="card-main" type="button" aria-label={label}>
     <div class="card">
         <CardDecor />
         <h6 class="numeral">{numeral}</h6>
@@ -18,16 +18,31 @@ const IconComponent = icons[icon]
             <IconComponent />
         </div>
     </div>
-</div>
+</button>
 
 <style>
     .card-main {
-
         width: clamp(140px, 7.5vw, 260px);
         height: clamp(235px, 12.5vw, 435px);
         padding: 3px;
         background: var(--tarot-gradient);
         border-radius: 8px;
+        transition: transform 0.2s ease;
+        /* reset button defaults */
+        border: none;
+        cursor: pointer;
+    }
+
+    @media (min-width: 768px) and (hover: hover) {
+        .card-main:hover {
+            transform: scale(1.04);
+        }
+    }
+
+    .card-main:focus-visible {
+        transform: scale(1.04);
+        outline: 2px solid transparent;
+        box-shadow: 0 0 0 3px #fff4, 0 0 0 5px #8b5cf6;
     }
 
     .card {
