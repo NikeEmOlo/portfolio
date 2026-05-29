@@ -27,7 +27,7 @@ body {
     ellipse 50vw 130vh at 50vw 90vh,
     #153638 5%,
     #0F2124 35%,
-    #090B10 70%);
+    #090B10 70%) fixed;
 }
 
 /* 6. Improve media defaults */

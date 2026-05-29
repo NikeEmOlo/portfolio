@@ -13,5 +13,10 @@ export default defineConfig({
         provider: fontProviders.fontsource(),
         name: "DM Sans",
         cssVariable: "--secondary-font"
+    },
+    {
+        provider: fontProviders.fontsource(),
+        name: "Boldonse",
+        cssVariable: "--boldonse"
     }]
 });

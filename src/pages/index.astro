@@ -32,7 +32,76 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
           </ul>
         </section>
       </main>
+      <div class="character-wrapper">
+        <video id="character-intro" autoplay muted playsinline preload="auto">
+          <source src="/intro_dark.webm" type="video/webm">
+        </video>
+        <video id="character-idle" muted playsinline loop preload="auto">
+          <source src="/idle_dark.webm" type="video/webm">
+        </video>
+      </div>
     </body>
+    <script>
+      //------------------------VIDEO----------------------------------------//
+        const intro = document.querySelector('#character-intro');
+        const idle = document.querySelector('#character-idle');
+        const wrapper = document.querySelector('.character-wrapper');
+
+        if (intro && idle && wrapper) {
+          // Decode and hold idle's first frame so it's ready to show instantly.
+          idle.play().then(() => idle.pause());
+
+          let swapped = false;
+
+          function doSwap() {
+            if (swapped) return;
+            swapped = true;
+            idle.currentTime = 0;
+            idle.play();
+            // Fade idle in over ~3 frames so the browser composites smoothly.
+            idle.style.transition = 'opacity 0.1s linear';
+            idle.style.opacity = '1';
+          }
+
+          intro.addEventListener('ended', () => {
+            intro.style.opacity = '0';
+          }, { once: true });
+
+          if (intro.requestVideoFrameCallback) {
+            function onIntroFrame(now, metadata) {
+              if (intro.duration && (intro.duration - metadata.mediaTime) <= 2 / 24) {
+                doSwap();
+                return;
+              }
+              intro.requestVideoFrameCallback(onIntroFrame);
+            }
+            intro.requestVideoFrameCallback(onIntroFrame);
+          }
+
+          intro.addEventListener('ended', doSwap, { once: true });
+        }
+
+        //------------------------ZOOM LOCK-----------------------------------//
+        if (matchMedia('(pointer: fine)').matches) {
+          const baseRatio = window.devicePixelRatio;
+
+          function counterZoom() {
+            const scale = baseRatio / window.devicePixelRatio;
+            wrapper.style.transform = `scale(${scale})`;
+          }
+
+          function watchZoom() {
+            const mq = matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+            mq.addEventListener('change', function handler() {
+              mq.removeEventListener('change', handler);
+              counterZoom();
+              watchZoom();
+            });
+          }
+
+          watchZoom();
+        }
+    </script>
     <style>
       body {
         display: flex;
@@ -140,6 +209,38 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
         .cards-row li:focus-within {
           transform: none;
           z-index: auto;
+        }
+      }
+
+      .character-wrapper {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: -1;
+        transform-origin: bottom center;
+
+        video {
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 1400px;
+          max-width: unset;
+          height: auto;
+          pointer-events: none;
+        }
+      }
+
+      #character-idle {
+        opacity: 0;
+      }
+
+      @media (max-width: 480px) {
+        .character-wrapper video {
+          width: 900px;
         }
       }
     </style>
