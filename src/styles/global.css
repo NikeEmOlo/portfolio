@@ -20,10 +20,14 @@ body {
   margin: 0 auto;
   width: 100%;
   padding: 1rem;
-  /* 4. Increase line-height */
-  line-height: 1.5;
-  /* 5. Improve text rendering */
-  -webkit-font-smoothing: antialiased;
+  line-height: 1.5; /* 4 */
+  -webkit-font-smoothing: antialiased; /* 5 */
+  min-height: 100dvh;
+  background: radial-gradient(
+    ellipse 50vw 130vh at 50vw 90vh,
+    #153638 5%,
+    #0F2124 35%,
+    #090B10 70%);
 }
 
 /* 6. Improve media defaults */
@@ -59,7 +63,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ----------------------------------------GLOBAL STYLES ---------------------------------------- */
 :root {
-  --tarot-gradient: linear-gradient(0.3turn, #359E9D 0%, #704898 42%, #BE83D3 82%, #359E9D 99%)
+  --tarot-gradient: linear-gradient(0.3turn, #359E9D 0%, #704898 42%, #BE83D3 82%, #359E9D 99%);
+  --muted-text: #71717A;
 }
 
 .visually-hidden {
@@ -73,13 +78,3 @@ h1, h2, h3, h4, h5, h6 {
   white-space: nowrap;
   border: 0;
 }
-
-body {
-  min-height: 100dvh;
-  background: radial-gradient(
-    ellipse 50vw 130vh at 50vw 90vh, 
-    #153638 5%,
-    #0F2124 35%,
-    #090B10 70%);
-}
-

@@ -9,7 +9,7 @@ export const projects = [
         projImg: "tbc",
         description: "This is some placeholder text. You need to replace this when you develop a new project. Do not forget to do that. More words.",
         button: "Read the case study",
-        tab: "Development",
+        tab: "development",
     },
     {
         id: 2,
@@ -21,7 +21,7 @@ export const projects = [
         projImg: "tbc",
         description: "This is some placeholder text. You need to replace this when you develop a new project. Do not forget to do that. More words.",
         button: "Read the case study",
-        tab: "Development",
+        tab: "development",
     },
     {
         id: 3,
@@ -33,7 +33,7 @@ export const projects = [
         projImg: "tbc",
         description: "Using a self-designed system of OpenClaw agents, I went from spending up to 12 hours per day job hunting to just under two.",
         button: "Read the case study",
-        tab: "Development",
+        tab: "development",
     },
     {
         id: 4,
@@ -45,7 +45,7 @@ export const projects = [
         projImg: "tbc",
         description: "This is some placeholder text. You need to replace this when you develop a new project. Do not forget to do that. More words.",
         button: "Read the case study",
-        tab: "Operations",
+        tab: "operations",
     },
     {
         id: 5,
@@ -57,6 +57,6 @@ export const projects = [
         projImg: "tbc",
         description: "This is some placeholder text. You need to replace this when you develop a new project. Do not forget to do that. More words.",
         button: "Read the case study",
-        tab: "Operations",
+        tab: "operations",
     },
 ]

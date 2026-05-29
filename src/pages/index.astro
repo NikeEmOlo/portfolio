@@ -25,6 +25,7 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
                   numeral={project.numeral}
                   icon={project.icon}
                   label={project.projTitle}
+                  tab={project.tab}
                 />
               </li>
             ))}
@@ -47,6 +48,7 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
         width: 100%;
         min-height: 100dvh;
         padding: 40px;
+        padding-top: calc(25vh + 60px);
         gap: 25vh;
       }
       /*
@@ -73,6 +75,24 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
           --b: 100px;
         }
       }
+      .cards-row li.hidden {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+        transform: translate(0, 0) rotate(0deg);
+      }
+      .cards-row li.at-center {
+        transform: translate(0, 0) rotate(0deg) !important;
+        pointer-events: none;
+      }
+      .cards-row.is-animating li {
+        transition: transform 1s ease;
+      }
+      @media (max-width: 480px) {
+        .cards-row li.hidden {
+          display: none;
+        }
+      }
       .cards-row li {
         position: absolute;
         top: 0;
@@ -85,7 +105,7 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
         --tx: calc(var(--tx-b) - 117.5px * sin(var(--theta)));
         --ty: calc(117.5px * (1 - cos(var(--theta))) + var(--ty-b));
         transform: translate(var(--tx), var(--ty)) rotate(var(--theta));
-        transition: transform 0.3s ease;
+        transition: transform 0.3s ease, opacity 0.2s ease;
         z-index: var(--index);
       }
       .cards-row li:hover,
@@ -98,5 +118,30 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
           transform: translate(var(--tx), calc(var(--ty) - 30px)) rotate(var(--theta));
         }
       }
+      @media (max-width: 480px) {
+        main {
+          padding-top: 20dvh;
+          padding-inline: 16px;
+        }
+        .cards-row {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          width: 100%;
+          height: auto;
+          gap: 1rem;
+        }
+        .cards-row li {
+          position: static;
+          transform: none;
+          transition: none;
+        }
+        .cards-row li:hover,
+        .cards-row li:focus-within {
+          transform: none;
+          z-index: auto;
+        }
+      }
     </style>
   </Base>
+

@@ -4,9 +4,7 @@ import CrabSVG from './CrabSVG.astro'
 import CardDecor from './TarotCardDecor.astro'
 
 const { numeral, icon, label } = Astro.props;
-const icons = {
-    crab: CrabSVG,
-}
+const icons = Object.fromEntries([['crab', CrabSVG]])
 const IconComponent = icons[icon]
 ---
 
@@ -28,7 +26,6 @@ const IconComponent = icons[icon]
         background: var(--tarot-gradient);
         border-radius: 8px;
         transition: transform 0.2s ease;
-        /* reset button defaults */
         border: none;
         cursor: pointer;
     }
@@ -55,6 +52,7 @@ const IconComponent = icons[icon]
         min-height: 100%;
         border-radius: 8px;
         background-color: #080E1C;
+        overflow: hidden;
     }
 
     .numeral {
@@ -69,10 +67,35 @@ const IconComponent = icons[icon]
     
     .icon {
         position: absolute;
-        left: calc(50% - 40.5px);   /* 50% minus half of 81 */
-        top: calc(50% - 16px);      /* 50% minus half of 58 */
+        left: calc(50% - 40.5px);
+        top: calc(50% - 16px);
         width: 81px;
         height: 58px;
+    }
+
+    @media (max-width: 480px) {
+        .card-main {
+            width: 90px;
+            height: 150px;
+        }
+
+        .card {
+            min-height: 0;
+            height: 100%;
+        }
+
+        .numeral {
+            font-size: 13px;
+        }
+
+        .icon {
+            width: 58%;
+            height: auto;
+            aspect-ratio: 81 / 58;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
     }
 </style>
 
