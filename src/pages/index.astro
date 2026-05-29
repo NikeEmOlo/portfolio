@@ -7,6 +7,7 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
 ---
   <Base>
     <body>
+      <div id="fly-overlay"></div>
       <main>
         <Navigation />
         <section aria-labelledby="projects-heading">
@@ -151,7 +152,7 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
         transform: translate(0, 0) rotate(0deg);
       }
       .cards-row li.at-center {
-        transform: translate(0, 0) rotate(0deg) !important;
+        transform: translate(0, 0) rotate(0deg);
         pointer-events: none;
       }
       .cards-row.is-animating li {
@@ -174,7 +175,7 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
         --tx: calc(var(--tx-b) - 117.5px * sin(var(--theta)));
         --ty: calc(117.5px * (1 - cos(var(--theta))) + var(--ty-b));
         transform: translate(var(--tx), var(--ty)) rotate(var(--theta));
-        transition: transform 0.3s ease, opacity 0.2s ease;
+        transition: transform 0.6s ease, opacity 0.2s ease;
         z-index: var(--index);
       }
       .cards-row li:hover,
@@ -212,6 +213,13 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
         }
       }
 
+      #fly-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+
       .character-wrapper {
         position: fixed;
         bottom: 0;
@@ -221,6 +229,7 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
         pointer-events: none;
         z-index: -1;
         transform-origin: bottom center;
+        transition: opacity 2s ease;
 
         video {
           position: absolute;
@@ -235,6 +244,10 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
       }
 
       #character-idle {
+        opacity: 0;
+      }
+
+      body.darkened .character-wrapper {
         opacity: 0;
       }
 

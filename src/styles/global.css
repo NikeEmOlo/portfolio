@@ -16,6 +16,11 @@
   }
 }
 
+@property --bg-1 { syntax: '<color>'; initial-value: #091A1B; inherits: false; }
+@property --bg-2 { syntax: '<color>'; initial-value: #070F11; inherits: false; }
+@property --bg-3 { syntax: '<color>'; initial-value: #050A0E; inherits: false; }
+@property --bg-4 { syntax: '<color>'; initial-value: #03050A; inherits: false; }
+
 body {
   margin: 0 auto;
   width: 100%;
@@ -24,11 +29,23 @@ body {
   -webkit-font-smoothing: antialiased; /* 5 */
   min-height: 100dvh;
   background: radial-gradient(
+    in oklab
     ellipse 50vw 130vh at 50vw 90vh,
-    #153638 5%,
-    #0F2124 35%,
-    #090B10 70%) fixed;
+    var(--bg-1) 5%,
+    var(--bg-2) 35%,
+    var(--bg-3) 52%,
+    var(--bg-4) 70%) fixed;
+  transition: --bg-1 2s ease, --bg-2 2s ease, --bg-3 2s ease, --bg-4 2s ease;
 }
+
+body.darkened {
+  --bg-1: #040D0E;
+  --bg-2: #030809;
+  --bg-3: #020507;
+  --bg-4: #010305;
+}
+
+
 
 /* 6. Improve media defaults */
 img, picture, video, canvas, svg {
