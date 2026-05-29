@@ -23,6 +23,7 @@ const tabs = [...new Set(projects.map((project) => project.tab))]
         <li><button>Contact</button></li>
     </ul>
 </nav>
+<div id="tab-announcement" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
 
 <script>
     // @ts-nocheck
@@ -64,6 +65,16 @@ const tabs = [...new Set(projects.map((project) => project.tab))]
                 c.classList.toggle('hidden', !isNext)
                 if (!isNext) c.classList.remove('at-center')
             })
+
+            // Announce to screen readers
+            const announcement = document.getElementById('tab-announcement')
+            if (announcement) {
+                const count = nextVisible.length
+                announcement.textContent = ''
+                requestAnimationFrame(() => {
+                    announcement.textContent = `Showing ${count} ${category} project${count === 1 ? '' : 's'}`
+                })
+            }
 
             // Phase 2: fan-out completes after 1s, then clean up
             setTimeout(() => {
