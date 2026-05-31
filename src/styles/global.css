@@ -84,6 +84,7 @@ h1, h2, h3, h4, h5, h6 {
   --muted-text: #71717A;
   --tarot-card-w: clamp(140px, 7.5vw, 260px);
   --tarot-card-h: clamp(235px, 12.5vw, 435px);
+  --tarot-card-radius: 8px;
 }
 
 .visually-hidden {

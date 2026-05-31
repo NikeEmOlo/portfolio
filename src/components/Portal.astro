@@ -9,7 +9,14 @@
 
 <style>
     .portal {
+        position: absolute;
+        /* positioning derived from TarotCard final state */
+        left: calc(-1 * var(--tarot-card-w));
+        top: calc(-0.6 * var(--tarot-card-h));
         width: calc(var(--tarot-card-w) * 3);
         height: calc(var(--tarot-card-h) * 3);
+        border-radius: var(--tarot-card-radius);
+        /* z-index: -1 ------prod */
+        z-index: 2;
     }
 </style>
