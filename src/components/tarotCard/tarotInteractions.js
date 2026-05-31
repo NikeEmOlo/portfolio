@@ -45,7 +45,7 @@ function cardFlyIn(card) {
         })
         .to(card, {
             scale: 3,
-            duration: 2.0,
+            duration: 1.0,
             ease: "sine.out"
         }, "-=0.2")
         .to(card, {

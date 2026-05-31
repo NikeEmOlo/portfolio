@@ -54,7 +54,7 @@ function animateTabSwitch(category) {
                 b.disabled = b.getAttribute('aria-pressed') === 'true'
             })
         }, 1000)
-    }, 1500)
+    }, 1100)
 }
 
 navButtons.forEach(button => {
