@@ -18,9 +18,6 @@ function tarotCardHandler(e) {
 
 
 
-
-
-
 function collapseCards(card) {
     activeCard = card; // remember which card was clicked
     tarotCards.forEach((c) => {

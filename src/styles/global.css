@@ -82,6 +82,8 @@ h1, h2, h3, h4, h5, h6 {
 :root {
   --tarot-gradient: linear-gradient(0.3turn, #359E9D 0%, #704898 42%, #BE83D3 82%, #359E9D 99%);
   --muted-text: #71717A;
+  --tarot-card-w: clamp(140px, 7.5vw, 260px);
+  --tarot-card-h: clamp(235px, 12.5vw, 435px);
 }
 
 .visually-hidden {
