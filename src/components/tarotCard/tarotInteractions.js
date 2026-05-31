@@ -1,18 +1,28 @@
 import { gsap } from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+import { updateNav, applyFilter, currentCategory } from "../navigation.js";
 gsap.registerPlugin(MotionPathPlugin);
 
 const tarotList = document.querySelector(".cards-row")
 const tarotCards = tarotList.querySelectorAll("li")
+let activeCard = null;
 
 
 function tarotCardHandler(e) {
+
   const card = e.currentTarget;
   collapseCards(card);
   cardFlyIn(card)
+  updateNav()
 }
 
+
+
+
+
+
 function collapseCards(card) {
+    activeCard = card; // remember which card was clicked
     tarotCards.forEach((c) => {
         c.classList.add("at-center")
     })
@@ -47,9 +57,23 @@ function cardFlyIn(card) {
     document.body.classList.add('darkened');
 }
 
-
-
-
+export function resetCards() {
+    document.body.classList.remove("darkened")
+        // reverses cardFlyIn and collapseCards
+        gsap.to(activeCard, {
+            scale: 1,
+            duration: 0.6,
+            ease: "power2.in",
+            onComplete: () => {
+                gsap.set(activeCard, { clearProps: "all" })
+                activeCard.style.transition = ''
+                tarotCards.forEach(c => c.classList.remove('at-center'))
+                applyFilter(currentCategory)
+                activeCard = null;
+                updateNav()
+            }
+        })
+}
 
 
 tarotCards.forEach((card) => {

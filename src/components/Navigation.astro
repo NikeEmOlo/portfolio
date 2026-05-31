@@ -24,137 +24,13 @@ const tabs = [...new Set(projects.map((project) => project.tab))]
             <li><button>Contact</button></li>
         </ul>
     </div>
+        <button class="close-btn">Close</button>
 </nav>
 <div id="tab-announcement" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
 
+
 <script>
-    // @ts-nocheck
-    // init nav
-    const navButtons = document.querySelectorAll('#project-list button')
-    navButtons[0]?.setAttribute("aria-pressed", "true") //set first tab to active
-
-    let isAnimating = false
-
-    function applyFilter(category) {
-        const allCards = [...document.querySelectorAll('.cards-row li[data-category]')]
-        const visible = allCards.filter(c => c.dataset.category === category)
-        allCards.forEach(c => c.classList.toggle('hidden', c.dataset.category !== category))
-        document.querySelector('.cards-row')?.style.setProperty('--card-count', visible.length)
-        visible.forEach((c, i) => c.style.setProperty('--index', i))
-    }
-
-    function animateTabSwitch(category) {
-        const allCards = [...document.querySelectorAll('.cards-row li[data-category]')]
-        const currentVisible = allCards.filter(c => !c.classList.contains('hidden'))
-        const nextVisible = allCards.filter(c => c.dataset.category === category)
-        const cardsRow = document.querySelector('.cards-row')
-
-        isAnimating = true
-        document.querySelectorAll('nav button').forEach(b => b.disabled = true)
-
-        // Phase 1: fan current cards in to centre (1s) + 0.5s pause
-        cardsRow.classList.add('is-animating')
-        currentVisible.forEach(c => c.classList.add('at-center'))
-
-        setTimeout(() => {
-            // Update arc vars for the incoming set
-            cardsRow.style.setProperty('--card-count', nextVisible.length)
-            nextVisible.forEach((c, i) => c.style.setProperty('--index', i))
-
-            // Swap: current goes hidden, next un-hides and fans out from centre
-            allCards.forEach(c => {
-                const isNext = c.dataset.category === category
-                c.classList.toggle('hidden', !isNext)
-                if (!isNext) c.classList.remove('at-center')
-            })
-
-            // Announce to screen readers
-            const announcement = document.getElementById('tab-announcement')
-            if (announcement) {
-                const count = nextVisible.length
-                announcement.textContent = ''
-                requestAnimationFrame(() => {
-                    announcement.textContent = `Showing ${count} ${category} project${count === 1 ? '' : 's'}`
-                })
-            }
-
-            // Phase 2: fan-out completes after 1s, then clean up
-            setTimeout(() => {
-                cardsRow.classList.remove('is-animating')
-                isAnimating = false
-                navButtons.forEach(b => {
-                    b.disabled = b.getAttribute('aria-pressed') === 'true'
-                })
-            }, 1000)
-        }, 1500)
-    }
-
-    // Initial filter without animation
-    const firstCategoryBtn = [...navButtons].find(b => b.dataset.category)
-    if (firstCategoryBtn) {
-        const allCards = [...document.querySelectorAll('.cards-row li[data-category]')]
-        allCards.forEach(c => { c.style.transition = 'none' })
-        applyFilter(firstCategoryBtn.dataset.category)
-        requestAnimationFrame(() => allCards.forEach(c => { c.style.transition = '' }))
-    }
-
-    //Add an event listener to each button
-    navButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            if (isAnimating) return
-            navButtons.forEach((b) => {
-                const isActive = b === button
-                b.setAttribute('aria-pressed', isActive ? "true" : "false")
-                b.disabled = isActive
-            })
-            if (button.dataset.category) animateTabSwitch(button.dataset.category)
-        })
-    })
-
-//------------------------HAMBURGER MENU------------------------------//
-    const hamburger = document.querySelector(".hamburger")
-
-    function closeMenu() {
-        hamburger?.setAttribute("aria-expanded", "false")
-        hamburger?.setAttribute("aria-label", "Open menu")
-    }
-
-    if (hamburger) {
-        hamburger.addEventListener("click", () => {
-            const expanded = hamburger.getAttribute("aria-expanded") === "true"
-            hamburger.setAttribute("aria-expanded", String(!expanded))
-            hamburger.setAttribute("aria-label", expanded ? "Open menu" : "Close menu")
-        })
-    }
-
-    navButtons.forEach((button) => {
-        button.addEventListener("click", closeMenu)
-    })
-
-    document.addEventListener("click", (e) => {
-        if (e.target instanceof Element && !e.target.closest("nav")) closeMenu()
-    })
-
-    // Switch to hamburger only when the nav would fill the viewport width
-    const nav = document.querySelector("nav")
-
-    function updateNavMode() {
-        if (!nav) return
-        const wasMobile = nav.classList.contains("is-mobile")
-        nav.classList.remove("is-mobile")
-        nav.style.width = "max-content"
-        const naturalWidth = nav.offsetWidth
-        nav.style.width = ""
-
-        if (naturalWidth >= window.innerWidth) {
-            nav.classList.add("is-mobile")
-        } else if (wasMobile) {
-            closeMenu()
-        }
-    }
-
-    new ResizeObserver(updateNavMode).observe(document.documentElement)
-    updateNavMode()
+    import "./navigation.js"
 </script>
 
 <style>
@@ -170,6 +46,20 @@ const tabs = [...new Set(projects.map((project) => project.tab))]
         border-radius: 16px;
         padding: 0 8px;
         z-index: 200;
+
+        .close-btn {
+            display: none;
+        }
+    }
+
+    nav.tarot-close {
+        & > *:not(.close-btn) {
+            display: none;
+        }
+
+        & > .close-btn {
+            display: flex;
+        }
     }
 
     nav::before {
