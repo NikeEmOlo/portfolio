@@ -1,0 +1,75 @@
+---
+interface Props {
+  text?: string;
+}
+const { text = "May the odds be ever in your favour" } = Astro.props;
+---
+
+<div class="portal-effect-wrap">
+  <canvas class="portal-effect" data-text={text} aria-hidden="true"></canvas>
+  <p class="portal-effect-label" aria-label={text}>{text}</p>
+</div>
+
+<script>
+  // @ts-nocheck
+  import { initPortalEffect } from './portalEffect.js';
+
+  const wrap   = document.querySelector('.portal-effect-wrap');
+  const canvas = document.querySelector('.portal-effect');
+  const text   = canvas.dataset.text;
+
+  initPortalEffect(canvas, text);
+</script>
+
+<style>
+  .portal-effect-wrap {
+    position: relative;
+    /* Fill the parent .portal box (portrait, card-derived dimensions) */
+    width: 100%;
+    height: 100%;
+    background: black;
+    border-radius: inherit;
+    overflow: hidden;
+  }
+
+  .portal-effect {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Visually hidden accessible label */
+  .portal-effect-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+    color: rgba(255,255,255,0.15);
+    /* This is the portal's font. Using it here (a real DOM element) is what
+       makes the browser download it; portalEffect.js reads the resolved family
+       off this element for the canvas. Swap to var(--secondary-font) / var(--boldonse). */
+    font-family: var(--main-font);
+    font-weight: 400;
+    font-size: clamp(2rem, 10vw, 8rem);
+    line-height: 1;
+    text-align: center;
+
+    /* Fallback when JS is off — make it visible */
+    @media (scripting: none) {
+      all: unset;
+      display: block;
+      color: rgba(255,255,255,0.15);
+      font: 400 clamp(2rem,10vw,8rem)/1 var(--main-font);
+      text-align: center;
+      letter-spacing: -0.02em;
+      padding: 2rem;
+    }
+  }
+</style>

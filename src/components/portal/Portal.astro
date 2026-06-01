@@ -1,0 +1,36 @@
+<script>
+    import "./portal.js"
+</script>
+
+
+<div class="portal">
+    <slot />
+</div>
+
+<style>
+    .portal {
+        display: block;
+        position: absolute;
+        /* positioning derived from TarotCard final state */
+        left: calc(-1 * var(--tarot-card-w) - 2px);
+        top: calc(-0.6 * var(--tarot-card-h));
+        width: calc(var(--tarot-card-w) * 3 + 2px);
+        height: calc(var(--tarot-card-h) * 3 + 2px);
+        border-radius: calc(var(--tarot-card-radius) * 3);
+        /* z-index: -1 ------prod */
+
+        background-color: black;
+
+        opacity: 0;
+        transition: opacity 1s ease-out;
+
+        /* The z-index is one greater than the hover effect of all card */
+        /* Calculated from the number of project cards */
+        z-index: calc(var(--card-count) + 2); 
+        pointer-events: none;
+    }
+
+    .portal.show {
+        opacity: 1;
+    }
+</style>

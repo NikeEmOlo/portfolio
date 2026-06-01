@@ -4,6 +4,8 @@ import Base from '../layouts/Base.astro'
 import { projects } from '../data/projects'
 import Navigation from '../components/Navigation.astro'
 import TarotCard from '../components/tarotCard/TarotCard.astro'
+import Portal from '../components/portal/Portal.astro'
+import PortalEffect from '../components/portal/PortalEffect.astro'
 ---
   <Base>
     <body>
@@ -30,6 +32,9 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
                 />
               </li>
             ))}
+            <Portal>
+              <PortalEffect />
+            </Portal>
           </ul>
         </section>
       </main>
@@ -45,7 +50,7 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
 
 
     <script>
-      import "./index.js"
+      import "../index.js"
     </script>
 
 
@@ -126,7 +131,7 @@ import TarotCard from '../components/tarotCard/TarotCard.astro'
       }
       .cards-row li:hover,
       .cards-row li:focus-within {
-        z-index: 10;
+        z-index: calc(var(--card-count) + 1);
       }
       @media (max-width: 1024px) {
         .cards-row li:hover {
