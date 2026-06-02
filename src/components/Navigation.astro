@@ -59,6 +59,12 @@ const tabs = [...new Set(projects.map((project) => project.tab))]
 
         & > .close-btn {
             display: flex;
+            color: #ffffff4b;
+        }
+
+        /* Swap the border gradient to match the darkened portal world (navy → purple) */
+        &::before {
+            background: linear-gradient(0.3turn, #1a27566e 0%, #16245e75 100%);
         }
     }
 

@@ -3,16 +3,36 @@
 const TRAIL_FADE_SECONDS = 5.0;  // seconds for a fully-lit area to fade back to black
 const DAB_RADIUS       = 0.06;
 const TURBULENCE       = 0.27;
-const TINT             = [0x87 / 255, 0x12 / 255, 0xff / 255];
-const IRID_FREQUENCY   = 3.0;
+// Trail palette — the glow cycles through these (from --tarot-gradient + a blue).
+// teal → blue → purple → pink. Tweak/reorder freely; keep it to 4 colours.
+const TRAIL_COLORS     = ['#359E9D', '#3E6FCF', '#704898', '#BE83D3'];
+const IRID_FREQUENCY   = 1.5;   // how many times the palette repeats across the text
 const IRID_ANGLE       = 81.0 * (Math.PI / 180);
 const IRID_SPEED       = 0.1;
 const BLOOM_THRESHOLD  = 0.25;
 const BLOOM_INTENSITY  = 0.6;
 const RENDER_SCALE     = 0.5;
-const REST_OPACITY     = 0.02;   // at-rest outline brightness — higher = more visible
-// NOTE: the portal's font is set in PortalEffect.astro on .portal-effect-label
-// (font-family/weight). This file reads it from that element — see below.
+const REST_OPACITY     = 0.01;   // at-rest outline brightness — higher = more visible
+
+// ─── Depth / bokeh (sits behind AND in front of the text) ─────────────────────
+const DEPTH_TINT = '#05090F';                                       // very dark cool centre of the far gradient (→ black at edges)
+const DEPTH_SEED = 1;                                               // stable bokeh layout across reloads/resizes
+const BOKEH_FAR  = { count: 16, size: [0.004, 0.020], opacity: 0.55, core: 0.6 }; // tiny sharp specks behind the text
+const BOKEH_NEAR = { count: 4,  size: [0.03,  0.10],  opacity: 0.18, core: 0   }; // soft out-of-focus motes in front
+
+// ─── Text layout (easy to tweak) ──────────────────────────────────────────────
+const FONT_CSS_VAR = '--secondary-font'; // Astro font var: --main-font | --secondary-font | --boldonse
+const FONT_WEIGHT  = 400;           // 400 = regular; raise if the font ships heavier weights
+const TEXT_SIZE    = 4;            // biggest text height as a % of the portal's height (auto-shrinks to fit)
+const LINE_HEIGHT  = 1.2;           // line spacing × font size
+const TEXT_ALIGN   = 'center';      // 'left' | 'center' | 'right'
+
+// Hex "#rrggbb" → [r, g, b] in 0..1 for the shader.
+function hexToRgb(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+}
+const TRAIL_RGB = TRAIL_COLORS.map(hexToRgb);
 
 // ─── WebGL helpers ────────────────────────────────────────────────────────────
 function compileShader(gl, src, type) {
@@ -126,14 +146,20 @@ uniform float     u_time;
 uniform float     u_irid_freq;
 uniform float     u_irid_speed;
 uniform float     u_irid_angle;
-uniform vec3      u_tint;
+uniform vec3      u_c0, u_c1, u_c2, u_c3;   // trail palette stops
 uniform float     u_bloom_thresh;
 uniform float     u_rest_opacity;
 
 const float PI = 3.14159265;
 
-vec3 cospalette(float t, vec3 a, vec3 b, vec3 c, vec3 d) {
-  return a + b * cos(2.0 * PI * (c * t + d));
+// Cycle through the four palette stops (teal → blue → purple → pink), looping.
+vec3 palette(float t) {
+  t = fract(t) * 4.0;
+  float i = floor(t);
+  float f = fract(t);
+  vec3 a = i < 1.0 ? u_c0 : i < 2.0 ? u_c1 : i < 3.0 ? u_c2 : u_c3;
+  vec3 b = i < 1.0 ? u_c1 : i < 2.0 ? u_c2 : i < 3.0 ? u_c3 : u_c0;
+  return mix(a, b, f);
 }
 
 void main() {
@@ -149,15 +175,7 @@ void main() {
   float coord = dot(v_uv, dir);
   float phase = coord * u_irid_freq + u_time * u_irid_speed;
 
-  vec3 irid = cospalette(phase,
-    vec3(0.5),
-    vec3(0.5),
-    vec3(1.0, 0.8, 0.6),
-    vec3(0.0, 0.2, 0.5)
-  );
-
-  // Tint toward purple
-  irid = mix(irid, u_tint, 0.45) * lit;
+  vec3 irid = palette(phase) * lit;
 
   // Rest (faint text outline from the mask channel)
   vec3 rest = vec3(restA * u_rest_opacity);
@@ -202,11 +220,27 @@ precision highp float;
 varying vec2 v_uv;
 uniform sampler2D u_scene;
 uniform sampler2D u_bloom;
+uniform sampler2D u_depth_far;    // bokeh behind the text
+uniform sampler2D u_depth_near;   // bokeh in front of the text
 uniform float     u_bloom_intensity;
+uniform float     u_time;
+uniform vec2      u_parallax;   // eased cursor offset from card centre (−0.5..0.5)
 void main() {
   vec3 scene = texture2D(u_scene, v_uv).rgb;
   vec3 bloom = texture2D(u_bloom, v_uv).rgb;
-  gl_FragColor = vec4(scene + bloom * u_bloom_intensity, 1.0);
+  // Inset the depth sampling so neither the float nor the parallax can reach the
+  // texture edge (sampling past it clamps and smears the last row/col into a line).
+  float M    = 0.10;
+  vec2  base = v_uv * (1.0 - 2.0 * M) + M;
+  // Each bokeh layer drifts on its own — independent floating inside the card…
+  vec2 floatFar  = vec2(sin(u_time * 0.18),       cos(u_time * 0.13))       * 0.020;
+  vec2 floatNear = vec2(sin(u_time * 0.21 + 1.7), cos(u_time * 0.16 + 0.6)) * 0.030;
+  // …and the whole scene parallaxes with the cursor — the near layer shifts more
+  // than the far, so the card reads like a 3D window as you move across it.
+  vec3 far  = texture2D(u_depth_far,  base + floatFar  + u_parallax * 0.04).rgb;
+  vec3 near = texture2D(u_depth_near, base + floatNear + u_parallax * 0.09).rgb;
+  // Sandwich the unchanged glow between far (behind) and near (in front) bokeh.
+  gl_FragColor = vec4(far + scene + bloom * u_bloom_intensity + near, 1.0);
 }`;
 
 // ─── Main initialiser ─────────────────────────────────────────────────────────
@@ -225,15 +259,18 @@ export function initPortalEffect(canvas, text) {
   const halfFloat = gl.getExtension('OES_texture_half_float');
   let trailType = halfFloat ? halfFloat.HALF_FLOAT_OES : gl.UNSIGNED_BYTE;
 
-  // The portal's font is controlled by the hidden .portal-effect-label via CSS.
-  // Reading the family/weight off that element gives the canvas the real
-  // (Astro-hashed) family name AND — because the label actually uses the font —
-  // guarantees the browser downloads it. Astro's Fonts API hides the real family
-  // name (e.g. "David Libre-3dcc…") behind the CSS variable, so we can't hardcode it.
-  const label      = canvas.parentElement && canvas.parentElement.querySelector('.portal-effect-label');
-  const labelStyle = label ? getComputedStyle(label) : null;
-  const fontFamily = labelStyle ? labelStyle.fontFamily : 'Arial, sans-serif';
-  const fontWeight = labelStyle ? labelStyle.fontWeight : '400';
+  // Drive the hidden .portal-effect-label's font from the constants above. Using
+  // the font on a real DOM element makes the browser download it; we then read the
+  // *resolved* family back off the label for the canvas — Astro's Fonts API hides
+  // the real family name (e.g. "David Libre-3dcc…") behind the CSS variable, so it
+  // can't be hardcoded.
+  const label = canvas.parentElement && canvas.parentElement.querySelector('.portal-effect-label');
+  if (label) {
+    label.style.fontFamily = `var(${FONT_CSS_VAR}, sans-serif)`;
+    label.style.fontWeight = FONT_WEIGHT;
+  }
+  const fontFamily = label ? getComputedStyle(label).fontFamily : 'sans-serif';
+  const fontWeight = FONT_WEIGHT;
 
   // ── Geometry: fullscreen quad ──
   const quad = gl.createBuffer();
@@ -287,10 +324,13 @@ export function initPortalEffect(canvas, text) {
     blurFBO  = makeFBO(gl, W, H);
 
     buildMaskTexture();
+    buildDepthTextures();
   }
 
   // ── Text mask texture ──
   let maskTex, restTex;
+  // ── Depth bokeh textures (behind / in front of the text) ──
+  let depthFarTex, depthNearTex;
 
   function buildMaskTexture() {
     const offW = W, offH = H;
@@ -299,9 +339,8 @@ export function initPortalEffect(canvas, text) {
     const pad       = 0.08;
     const maxWidth  = offW * (1 - 2 * pad);
     const maxHeight = offH * (1 - 2 * pad);
-    const LINE_H    = 1.2;                         // line spacing × font size
     const MIN_FONT  = 10;
-    const MAX_FONT  = Math.round(offH * 0.45);
+    const MAX_FONT  = Math.round(offH * TEXT_SIZE / 100);
     const fontFor   = s => `${fontWeight} ${s}px ${fontFamily}`;
 
     // Scratch context used only for measuring during layout.
@@ -336,7 +375,7 @@ export function initPortalEffect(canvas, text) {
     while (lo <= hi) {
       const mid   = (lo + hi) >> 1;
       const lines = wrapLines(mid);
-      const fits  = lines.length * mid * LINE_H <= maxHeight &&
+      const fits  = lines.length * mid * LINE_HEIGHT <= maxHeight &&
                     widestLine(lines) <= maxWidth;
       if (fits) { fontSize = mid; lo = mid + 1; }
       else      { hi = mid - 1; }
@@ -351,11 +390,16 @@ export function initPortalEffect(canvas, text) {
     }
 
     const fontStr    = fontFor(fontSize);
-    const lineHeight = fontSize * LINE_H;
+    const lineHeight = fontSize * LINE_HEIGHT;
     const blockH     = lines.length * lineHeight;
     const startY     = offH / 2 - blockH / 2 + lineHeight / 2;   // vertically centred
 
-    // Render the wrapped, centred lines. mode: 'fill' (light mask) or
+    // Horizontal anchor for the chosen alignment.
+    const alignX = TEXT_ALIGN === 'left'  ? pad * offW
+                 : TEXT_ALIGN === 'right' ? offW * (1 - pad)
+                 :                          offW / 2;
+
+    // Render the wrapped, aligned lines. mode: 'fill' (light mask) or
     // 'stroke' (faint at-rest outline).
     function renderLayer(mode) {
       const c  = document.createElement('canvas');
@@ -364,21 +408,81 @@ export function initPortalEffect(canvas, text) {
       const cx = c.getContext('2d');
       cx.clearRect(0, 0, offW, offH);
       cx.font         = fontStr;
-      cx.textAlign    = 'center';
+      cx.textAlign    = TEXT_ALIGN;
       cx.textBaseline = 'middle';
       cx.fillStyle    = 'white';
       cx.strokeStyle  = 'white';
       cx.lineWidth    = 1;
       lines.forEach((line, i) => {
         const y = startY + i * lineHeight;
-        if (mode === 'stroke') cx.strokeText(line, offW / 2, y);
-        else                   cx.fillText(line, offW / 2, y);
+        if (mode === 'stroke') cx.strokeText(line, alignX, y);
+        else                   cx.fillText(line, alignX, y);
       });
       return c;
     }
 
     maskTex = uploadCanvasTex(gl, renderLayer('fill'),   maskTex);
     restTex = uploadCanvasTex(gl, renderLayer('stroke'), restTex);
+  }
+
+  // Seeded PRNG (mulberry32) so the bokeh layout is stable across reloads/resizes.
+  function makeRng(seed) {
+    let a = seed >>> 0;
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // Build one bokeh layer on an OPAQUE background (so its RGB can be added
+  // directly in the shader — black areas add nothing). Far layer paints the dark
+  // depth gradient; near layer is solid black. Bokeh are soft palette-tinted discs.
+  function buildDepthLayer(opts, withGradient, seed) {
+    // Build at full canvas resolution (not the half-res render buffer) so the
+    // specks stay sharp instead of being upscaled/blurred in the final pass.
+    const fw = canvas.width, fh = canvas.height;
+    const c  = document.createElement('canvas');
+    c.width  = fw;
+    c.height = fh;
+    const cx = c.getContext('2d');
+
+    if (withGradient) {
+      const g = cx.createRadialGradient(fw / 2, fh / 2, 0, fw / 2, fh / 2, Math.max(fw, fh) * 0.75);
+      g.addColorStop(0, DEPTH_TINT);
+      g.addColorStop(1, '#000000');
+      cx.fillStyle = g;
+    } else {
+      cx.fillStyle = '#000000';
+    }
+    cx.fillRect(0, 0, fw, fh);
+
+    const rng    = makeRng(seed);
+    const minDim = Math.min(fw, fh);
+    const core   = opts.core || 0;                // 0 = soft glow, ~0.6 = crisp solid core
+    cx.globalCompositeOperation = 'lighter';      // bokeh add as light
+    for (let i = 0; i < opts.count; i++) {
+      const x   = rng() * fw;
+      const y   = rng() * fh;
+      const sr  = rng();                                              // bias toward small (most are tiny specks)
+      const r   = (opts.size[0] + sr * sr * (opts.size[1] - opts.size[0])) * minDim;
+      const a   = opts.opacity * (0.5 + 0.5 * rng());                 // vary brightness
+      const rgb = hexToRgb(TRAIL_COLORS[(rng() * TRAIL_COLORS.length) | 0]);
+      const csv = `${(rgb[0] * 255) | 0}, ${(rgb[1] * 255) | 0}, ${(rgb[2] * 255) | 0}`;
+      const dot = cx.createRadialGradient(x, y, 0, x, y, r);
+      dot.addColorStop(0, `rgba(${csv}, ${a})`);
+      if (core > 0) dot.addColorStop(core, `rgba(${csv}, ${a})`);     // hold a solid core → sharper speck
+      dot.addColorStop(1, `rgba(${csv}, 0)`);
+      cx.fillStyle = dot;
+      cx.fillRect(x - r, y - r, r * 2, r * 2);
+    }
+    return c;
+  }
+
+  function buildDepthTextures() {
+    depthFarTex  = uploadCanvasTex(gl, buildDepthLayer(BOKEH_FAR,  true,  DEPTH_SEED),      depthFarTex);
+    depthNearTex = uploadCanvasTex(gl, buildDepthLayer(BOKEH_NEAR, false, DEPTH_SEED + 99), depthNearTex);
   }
 
   function uploadCanvasTex(gl, src, existing) {
@@ -480,6 +584,7 @@ export function initPortalEffect(canvas, text) {
   let ping = pingA, pong = pingB;
   let raf;
   let lastT = 0;
+  let px = 0, py = 0;   // eased whole-scene parallax (depth shifts with the cursor)
 
   function frame(ts) {
     raf = requestAnimationFrame(frame);
@@ -502,6 +607,13 @@ export function initPortalEffect(canvas, text) {
     } else {
       mx = mouseX; my = mouseY; dab = 0.0; // cursor away: let the trail fade out
     }
+
+    // Ease the whole-scene parallax toward the cursor's offset from centre
+    // (eases back to centre when the cursor leaves). Used only by the depth layers.
+    const ptx = hasMouse ? mouseX - 0.5 : 0.0;
+    const pty = hasMouse ? mouseY - 0.5 : 0.0;
+    px += (ptx - px) * 0.06;
+    py += (pty - py) * 0.06;
 
     // ── Pass 1: Trail ──
     gl.bindFramebuffer(gl.FRAMEBUFFER, pong.fb);
@@ -537,7 +649,10 @@ export function initPortalEffect(canvas, text) {
     gl.uniform1f(gl.getUniformLocation(compProg, 'u_irid_freq'),    IRID_FREQUENCY);
     gl.uniform1f(gl.getUniformLocation(compProg, 'u_irid_speed'),   IRID_SPEED);
     gl.uniform1f(gl.getUniformLocation(compProg, 'u_irid_angle'),   IRID_ANGLE);
-    gl.uniform3f(gl.getUniformLocation(compProg, 'u_tint'),         TINT[0], TINT[1], TINT[2]);
+    gl.uniform3fv(gl.getUniformLocation(compProg, 'u_c0'), TRAIL_RGB[0]);
+    gl.uniform3fv(gl.getUniformLocation(compProg, 'u_c1'), TRAIL_RGB[1]);
+    gl.uniform3fv(gl.getUniformLocation(compProg, 'u_c2'), TRAIL_RGB[2]);
+    gl.uniform3fv(gl.getUniformLocation(compProg, 'u_c3'), TRAIL_RGB[3]);
     gl.uniform1f(gl.getUniformLocation(compProg, 'u_rest_opacity'), REST_OPACITY);
     gl.uniform1f(gl.getUniformLocation(compProg, 'u_bloom_thresh'), BLOOM_THRESHOLD);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -576,9 +691,15 @@ export function initPortalEffect(canvas, text) {
     bindQuad(finalProg);
     bindTex(0, compFBO.tex);
     bindTex(1, brightFBO.tex);
+    bindTex(2, depthFarTex);
+    bindTex(3, depthNearTex);
     gl.uniform1i(gl.getUniformLocation(finalProg, 'u_scene'),          0);
     gl.uniform1i(gl.getUniformLocation(finalProg, 'u_bloom'),          1);
+    gl.uniform1i(gl.getUniformLocation(finalProg, 'u_depth_far'),      2);
+    gl.uniform1i(gl.getUniformLocation(finalProg, 'u_depth_near'),     3);
     gl.uniform1f(gl.getUniformLocation(finalProg, 'u_bloom_intensity'), BLOOM_INTENSITY);
+    gl.uniform1f(gl.getUniformLocation(finalProg, 'u_time'),            t);
+    gl.uniform2f(gl.getUniformLocation(finalProg, 'u_parallax'),        px, py);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 

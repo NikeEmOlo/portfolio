@@ -2,7 +2,7 @@
 interface Props {
   text?: string;
 }
-const { text = "May the odds be ever in your favour" } = Astro.props;
+const { text = "The universe foresees an offer letter1" } = Astro.props;
 ---
 
 <div class="portal-effect-wrap">
@@ -30,6 +30,19 @@ const { text = "May the odds be ever in your favour" } = Astro.props;
     background: black;
     border-radius: inherit;
     overflow: hidden;
+  }
+
+  /* Glassy dark-space surface: a faint top sheen (glass reflection) + a deep
+     edge vignette so it reads like peering into dark space through glass. Sits
+     above the canvas; pointer-events:none so the mouse trail is unaffected. */
+  .portal-effect-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(120% 70% at 50% -10%, rgba(150, 180, 255, 0.06), transparent 55%);
+    box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.85);   /* recessed depth vignette */
   }
 
   .portal-effect {

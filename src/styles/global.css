@@ -39,10 +39,10 @@ body {
 }
 
 body.darkened {
-  --bg-1: #040D0E;
-  --bg-2: #030809;
-  --bg-3: #020507;
-  --bg-4: #010305;
+  --bg-1: #03070A;
+  --bg-2: #020407;
+  --bg-3: #010204;
+  --bg-4: #000000;
 }
 
 
@@ -85,6 +85,7 @@ h1, h2, h3, h4, h5, h6 {
   --tarot-card-w: clamp(140px, 7.5vw, 260px);
   --tarot-card-h: clamp(235px, 12.5vw, 435px);
   --tarot-card-radius: 8px;
+  --tarot-card-scale: 2;
 }
 
 .visually-hidden {

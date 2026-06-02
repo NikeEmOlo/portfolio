@@ -1,5 +1,9 @@
 <script>
     import "./portal.js"
+    import { tarotCardScale } from "../tarotCard/tarotInteractions.js"
+    // Single source of truth: drive all scale-dependent portal geometry (see CSS) off this.
+    const portal = document.querySelector(".portal")
+    portal.style.setProperty("--scale", String(tarotCardScale))
 </script>
 
 
@@ -11,15 +15,27 @@
     .portal {
         display: block;
         position: absolute;
-        /* positioning derived from TarotCard final state */
-        left: calc(-1 * var(--tarot-card-w) - 2px);
-        top: calc(-0.6 * var(--tarot-card-h));
-        width: calc(var(--tarot-card-w) * 3 + 2px);
-        height: calc(var(--tarot-card-h) * 3 + 2px);
-        border-radius: calc(var(--tarot-card-radius) * 3);
+        /* Geometry derived from the scaled TarotCard. cardFlyIn scales the card by
+           --scale (set from tarotCardScale) around transformOrigin "50% 30%", which
+           shifts its top-left by -ox·(scale-1)·w and -oy·(scale-1)·h.
+           --ox/--oy MUST match that transformOrigin. Fallback 1 = pre-script safety. */
+        --ox: 0.5;
+        --oy: 0.3;
+        left: calc(-1 * var(--ox) * (var(--scale, 1) - 1) * var(--tarot-card-w) - 2px);
+        top: calc(-1 * var(--oy) * (var(--scale, 1) - 1) * var(--tarot-card-h));
+        width: calc(var(--tarot-card-w) * var(--scale, 1) + 2px);
+        height: calc(var(--tarot-card-h) * var(--scale, 1) + 2px);
+        border: none;
+        border-radius: calc(var(--tarot-card-radius) * var(--scale, 1));
         /* z-index: -1 ------prod */
 
         background-color: black;
+
+        /* Faint, even rim so the card edge reads on all four sides against the
+           near-black page (no top-only lip), plus a whisper of glow to lift it off. */
+        box-shadow:
+          0 0 0 1px rgba(71, 88, 107, 0.151),
+          0 0 24px rgba(110, 144, 200, 0.053);
 
         opacity: 0;
         transition: opacity 1s ease-out;

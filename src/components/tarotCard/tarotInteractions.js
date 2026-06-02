@@ -6,6 +6,7 @@ gsap.registerPlugin(MotionPathPlugin);
 
 const tarotList = document.querySelector(".cards-row")
 const tarotCards = tarotList.querySelectorAll("li")
+export const tarotCardScale = 2
 let activeCard = null;
 
 
@@ -40,7 +41,7 @@ function cardFlyIn(card) {
             ease: "power1.out"
         })
         .to(card, {
-            scale: 3,
+            scale: tarotCardScale,
             duration: 1.0,
             ease: "sine.out"
         }, "-=0.2")
