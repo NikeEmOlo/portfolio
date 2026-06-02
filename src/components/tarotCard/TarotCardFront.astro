@@ -1,18 +1,19 @@
 <script>
-    import "./portal.js"
+    // @ts-nocheck
+    import "./tarotCardFront.js"
     import { tarotCardScale } from "../tarotCard/tarotInteractions.js"
-    // Single source of truth: drive all scale-dependent portal geometry (see CSS) off this.
-    const portal = document.querySelector(".portal")
-    portal.style.setProperty("--scale", String(tarotCardScale))
+    // Single source of truth: drive all scale-dependent card-front geometry (see CSS) off this.
+    const cardFront = document.querySelector(".tarot-front")
+    cardFront.style.setProperty("--scale", String(tarotCardScale))
 </script>
 
 
-<div class="portal">
+<div class="tarot-front">
     <slot />
 </div>
 
 <style>
-    .portal {
+    .tarot-front {
         display: block;
         position: absolute;
         /* Geometry derived from the scaled TarotCard. cardFlyIn scales the card by
@@ -46,7 +47,7 @@
         pointer-events: none;
     }
 
-    .portal.show {
+    .tarot-front.show {
         opacity: 1;
     }
 </style>

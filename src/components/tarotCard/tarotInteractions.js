@@ -1,7 +1,7 @@
 import { gsap } from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { updateNav, applyFilter, currentCategory } from "../navigation.js";
-import { displayPortal } from "../portal/portal.js";
+import { displayCardFront } from "./tarotCardFront.js";
 gsap.registerPlugin(MotionPathPlugin);
 
 const tarotList = document.querySelector(".cards-row")
@@ -32,7 +32,7 @@ function collapseCards(card) {
 }
 
 function cardFlyIn(card) {
-    const tl = gsap.timeline({ delay: .5, onStart: () => card.style.transition = 'none', onComplete: displayPortal });
+    const tl = gsap.timeline({ delay: .5, onStart: () => card.style.transition = 'none', onComplete: displayCardFront });
 
     tl.set(card, { transformPerspective: 800, transformOrigin: "50% 30%" })
         .to(card, {
@@ -55,7 +55,7 @@ function cardFlyIn(card) {
 }
 
 export function resetCards() {
-    displayPortal(() => {
+    displayCardFront(() => {
         document.body.classList.remove("darkened")
         gsap.to(activeCard, {
             scale: 1,

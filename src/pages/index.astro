@@ -4,8 +4,7 @@ import Base from '../layouts/Base.astro'
 import { projects } from '../data/projects'
 import Navigation from '../components/Navigation.astro'
 import TarotCard from '../components/tarotCard/TarotCard.astro'
-import Portal from '../components/portal/Portal.astro'
-import PortalEffect from '../components/portal/PortalEffect.astro'
+import TarotCardFront from '../components/tarotCard/TarotCardFront.astro'
 ---
   <Base>
     <body>
@@ -32,9 +31,7 @@ import PortalEffect from '../components/portal/PortalEffect.astro'
                 />
               </li>
             ))}
-            <Portal>
-              <PortalEffect />
-            </Portal>
+            <TarotCardFront />
           </ul>
         </section>
       </main>
