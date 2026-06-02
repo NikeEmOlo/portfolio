@@ -4,7 +4,7 @@ projTitle: "The Odin Project"
 cardTitle: "Full-stack study"
 projType: "overview & timeline"
 icon: "crab"
-category: "development"
+category: { development: 1 }
 overview: {
     Task: "Placeholder",
     Obstacles: "Placeholder",

@@ -4,7 +4,7 @@ projTitle: "Fixing the programme"
 cardTitle: "Improving processes"
 projType: "case study"
 icon: "crab"
-category: "operations"
+category: { operations: 3 }
 overview: {
     Task: "Placeholder",
     Obstacles: "Placeholder",

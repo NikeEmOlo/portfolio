@@ -1,8 +1,16 @@
 ---
 import '../styles/global.css'
-import { projects } from '../data/projects'
+import { getCollection } from 'astro:content'
 
-const tabs = [...new Set(projects.map((project) => project.tab))]
+// Each project's `category` is a { name: navSortOrder } map; collect the unique
+// categories and order the tabs by that sort value (lowest first).
+const projectEntries = await getCollection('projects')
+const categorySortOrder = new Map()
+for (const entry of projectEntries) {
+    const [[name, sortOrder]] = Object.entries(entry.data.category)
+    categorySortOrder.set(name, sortOrder)
+}
+const tabs = [...categorySortOrder.keys()].sort((a, b) => categorySortOrder.get(a) - categorySortOrder.get(b))
 ---
 
 <nav>

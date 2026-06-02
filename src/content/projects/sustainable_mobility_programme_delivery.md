@@ -4,7 +4,7 @@ projTitle: "The Sustainable Mobility Programme"
 cardTitle: "Service delivery"
 projType: "case study"
 icon: "crab"
-category: "delivery"
+category: { delivery: 2 }
 overview: {
     Task: "Placeholder",
     Obstacles: "Placeholder",

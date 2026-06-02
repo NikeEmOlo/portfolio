@@ -1,10 +1,24 @@
 ---
 import '../styles/global.css'
+import { getCollection } from 'astro:content'
 import Base from '../layouts/Base.astro'
-import { projects } from '../data/projects'
 import Navigation from '../components/Navigation.astro'
 import TarotCard from '../components/tarotCard/TarotCard.astro'
 import TarotCardFront from '../components/tarotCard/TarotCardFront.astro'
+
+const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
+const toRoman = (position) => romanNumerals[position - 1] ?? String(position)
+
+// Source projects from the content collection, ordered by their `order` field.
+const projectEntries = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
+
+const categoryCount = {} // counts number of cards in category so far
+const projects = projectEntries.map((entry) => {
+  // `category` is a { name: navSortOrder } map; we only need the name for rendering/filtering.
+  const [category] = Object.keys(entry.data.category)
+  categoryCount[category] = (categoryCount[category] ?? 0) + 1 // One more than the category count
+  return { ...entry.data, category, numeral: toRoman(categoryCount[category]) } // flatten category to its name + add numeral
+})
 ---
   <Base>
     <body>
@@ -20,14 +34,13 @@ import TarotCardFront from '../components/tarotCard/TarotCardFront.astro'
             style={`--card-count: ${projects.length}`}>
             {projects.map((project, index) => (
               <li
-                data-category={project.tab}
+                data-category={project.category}
                 style={`--index: ${index}`}
               >
                 <TarotCard
                   numeral={project.numeral}
                   icon={project.icon}
                   label={project.projTitle}
-                  tab={project.tab}
                 />
               </li>
             ))}

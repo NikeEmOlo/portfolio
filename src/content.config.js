@@ -11,10 +11,11 @@ const projects = defineCollection({
         cardTitle: z.string(),
         projType: z.string(),
         icon: z.string(),
-        category: z.string(),
+        // Single-entry map of { categoryName: navSortOrder }, e.g. { development: 1 }.
+        category: z.record(z.number()),
         tags: z.record(z.array(z.string())).optional(),
         overview: z.record(z.string()).optional(),
-        buttonTxt: string().optional(),
+        buttonTxt: z.string().optional(),
         links: z.record(z.string()).optional(),
         active: z.boolean().default(true),
     }),

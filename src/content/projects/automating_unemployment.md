@@ -4,7 +4,7 @@ projTitle: "Automating Unemployment"
 cardTitle: "AI Agents"
 projType: "case study"
 icon: "crab"
-category: "operations"
+category: { operations: 3 }
 overview: {
     Problem: "Placeholder",
     Goal: "Placeholder",

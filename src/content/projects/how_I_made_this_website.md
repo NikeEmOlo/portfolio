@@ -1,10 +1,10 @@
 ---
 order: 7
 projTitle: "How I built this website"
-cardTitle: "Full-stack study"
-projType: "overview & timeline"
+cardTitle: "This portfolio"
+projType: "Case Study"
 icon: "crab"
-category: "development"
+category: { development: 1 }
 overview: {
     Task: "Placeholder",
     Obstacles: "Placeholder",
