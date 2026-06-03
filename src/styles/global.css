@@ -77,6 +77,9 @@ h1, h2, h3, h4, h5, h6 {
   --muted-text: #71717A;
   --white: #ffffff;
 
+  /* ---------- Overview ---------- */
+  --overview-bg: #9B6FC4;
+
   /* ---------- Sizing ---------- */
   --tarot-card-w: clamp(140px, 7.5vw, 260px);
   --tarot-card-h: clamp(235px, 12.5vw, 435px);
@@ -99,6 +102,8 @@ h1, h2, h3, h4, h5, h6 {
  /* ------------------Overviews Global styles --------------- */
 
  span.standout.overview {
+    display: block;
+    margin: 8px 0;
     font-family: var(--boldonse);
     font-size: 2rem;
  }

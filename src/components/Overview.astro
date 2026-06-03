@@ -1,0 +1,110 @@
+---
+import TarotCardFront from "./tarotCard/TarotCardFront.astro";
+import { Image } from "astro:assets"
+import LinkButton from "./LinkButton.astro"
+import PortalEffect from "./portal/PortalEffect.astro";
+const { title, img, imgClass, buttonTxt, overviewID } = Astro.props;
+---
+
+<div class="overview" data-overview={overviewID}>
+    <div class="text">
+        <h1 class="title">{title}</h1>
+        <h2 class="subtitle">Overview</h2>
+        <slot />
+    </div>
+    <div class="card-column">
+        <Image src={img} alt="The OpenClaw logo" class={imgClass} />
+        <TarotCardFront>
+            <PortalEffect />
+        </TarotCardFront> 
+        <LinkButton variant="overview" buttonTxt={buttonTxt}/>
+    </div>
+</div>
+
+<style>
+    div {
+        display: flex;
+    }
+
+    .overview {
+        position: fixed;
+        inset: 0;
+        padding-right: max(20vw, 1rem);
+        padding-left: max(20vw, 1rem);
+        margin: auto;
+        background-color: var(--overview-bg);
+        min-height: 100vh;
+        min-width: 100dvh;
+
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        /* fade opacity both ways; on hide, hold visibility until the fade finishes */
+        transition: opacity 0.8s ease, visibility 0s linear 0.8s;
+        z-index: 100;
+    }
+
+    .overview.show {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition: opacity 0.8s ease, visibility 0s linear 0s;
+    }
+
+    .text {
+        flex-direction: column;
+        width: 450px;
+        gap: 1.2rem;
+        align-self: center;
+        font-family: var(--secondary-font);
+        color: var(--text);
+
+        .title {
+            font-family: var(--boldonse), Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            margin-bottom: 2.5rem;
+        }
+
+        .subtitle {
+            background-color: var(--ink);
+            width: fit-content;
+            transform: rotate(-3deg);
+        }
+
+        p {
+            font-size: 1rem;
+        }
+
+        strong {
+            font-size: 1.5rem;
+            font-weight: 900;
+        }
+
+
+    }
+
+    .card-column {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        right: max(20vw, 24px);
+        margin-left: auto;
+
+        .openclaw-logo {
+            position: relative;
+            top: 10vh;
+            width: 25%;
+            z-index: -1;
+            /* The SVG's viewBox is a 250x250 square, so the wide crab has empty
+               space above/below it. Give the box a wider ratio and let the image
+               cover it — that crops the vertical padding. Tweak 250/150 to taste. */
+            aspect-ratio: 250 / 120;
+            object-fit: fill;
+            object-position: center;
+        }
+    }
+</style>

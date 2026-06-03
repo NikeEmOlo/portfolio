@@ -25,7 +25,8 @@ const overviews = defineCollection({
     loader: glob({ pattern: "**/*.md", base: "./src/content/overviews" }),
     schema: ({ image }) => z.object({   
         projTitle: z.string(),
-        img: image().optional(),        
+        img: image().optional(),
+        imgClass: z.string().optional(),       
         buttonTxt: z.string().default("Dive In"),
         link: z.string(),
     }),

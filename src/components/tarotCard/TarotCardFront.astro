@@ -14,16 +14,9 @@
 
 <style>
     .tarot-front {
-        display: block;
-        position: absolute;
-        /* Geometry derived from the scaled TarotCard. cardFlyIn scales the card by
-           --scale (set from tarotCardScale) around transformOrigin "50% 30%", which
-           shifts its top-left by -ox·(scale-1)·w and -oy·(scale-1)·h.
-           --ox/--oy MUST match that transformOrigin. Fallback 1 = pre-script safety. */
-        --ox: 0.5;
-        --oy: 0.3;
-        left: calc(-1 * var(--ox) * (var(--scale, 1) - 1) * var(--tarot-card-w) - 2px);
-        top: calc(-1 * var(--oy) * (var(--scale, 1) - 1) * var(--tarot-card-h));
+        display: flex;
+        /* Sized to match the scaled TarotCard so the fly-in card can Flip onto it.
+           --scale is set from tarotCardScale in the script above (fallback 1 = pre-script safety). */
         width: calc(var(--tarot-card-w) * var(--scale, 1) + 2px);
         height: calc(var(--tarot-card-h) * var(--scale, 1) + 2px);
         border: none;
@@ -38,7 +31,7 @@
           0 0 0 1px rgba(71, 88, 107, 0.151),
           0 0 24px rgba(110, 144, 200, 0.053);
 
-        opacity: 0;
+        opacity: 1;
         transition: opacity 1s ease-out;
 
         /* The z-index is one greater than the hover effect of all card */

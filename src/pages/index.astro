@@ -1,13 +1,22 @@
 ---
 import '../styles/global.css'
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import Base from '../layouts/Base.astro'
 import Navigation from '../components/Navigation.astro'
 import TarotCard from '../components/tarotCard/TarotCard.astro'
-import TarotCardFront from '../components/tarotCard/TarotCardFront.astro'
+import Overview from '../components/Overview.astro'
 
 const projectEntries = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
 const projectOverviews = (await getCollection("overviews"))
+
+// Pre-render each overview's markdown body so we can emit one Overview per project.
+const overviews = await Promise.all(
+  projectOverviews.map(async (entry) => ({
+    ...entry.data,
+    id: entry.id,
+    Content: (await render(entry)).Content,
+  }))
+)
 
 function getCategory(entry) {
   return Object.keys(entry.data.category)[0]
@@ -23,12 +32,20 @@ function toRoman(position) {
   return romanNumerals[position - 1] ?? String(position)
 }
 
+function getOverview(projectID) {
+  return projectOverviews.find((overview) => overview.id === projectID)
+}
+
 // get new object including numeral and flattened category
 const projects = projectEntries.map((entry) => ({
+  id: entry.id,
   ...entry.data,
   category: getCategory(entry),
-  numeral: toRoman(getCardPosition(entry, projectEntries))
+  numeral: toRoman(getCardPosition(entry, projectEntries)),
+  overview: getOverview(entry.id),
 }))
+
+
 ---
 
   <Base>
@@ -36,16 +53,29 @@ const projects = projectEntries.map((entry) => ({
       <div id="fly-overlay"></div>
       <main>
         <Navigation />
+        {overviews.map((overview) => {
+          const { Content } = overview
+          return (
+            <Overview
+              img={overview.img}
+              title={overview.projTitle}
+              buttonTxt={overview.buttonTxt}
+              imgClass={overview.imgClass}
+              overviewID={overview.id}>
+              <Content />
+            </Overview>
+          )
+        })}
         <section aria-labelledby="projects-heading">
           <h2 id="projects-heading" class="visually-hidden">Projects</h2>
           <ul
             class="cards-row"
             role="list"
-            data-active-category="dev"
             style={`--card-count: ${projects.length}`}>
             {projects.map((project, index) => (
               <li
                 data-category={project.category}
+                data-overview={project.id}
                 style={`--index: ${index}`}
               >
                 <TarotCard
@@ -55,7 +85,6 @@ const projects = projectEntries.map((entry) => ({
                 />
               </li>
             ))}
-            <TarotCardFront />
           </ul>
         </section>
       </main>
@@ -96,11 +125,11 @@ const projects = projectEntries.map((entry) => ({
         transition: --bg-1 2s ease, --bg-2 2s ease, --bg-3 2s ease, --bg-4 2s ease;
       }
 
-      body.darkened {
-        --bg-1: #03070A;
-        --bg-2: #020407;
-        --bg-3: #010204;
-        --bg-4: #000000;
+      body.fill-background {
+        --bg-1: var(--overview-bg);
+        --bg-2: var(--overview-bg);
+        --bg-3: var(--overview-bg);
+        --bg-4: var(--overview-bg);
       }
       main {
         display: flex;
@@ -239,7 +268,7 @@ const projects = projectEntries.map((entry) => ({
         opacity: 0;
       }
 
-      body.darkened .character-wrapper {
+      body.fill-background .character-wrapper {
         opacity: 0;
       }
 
