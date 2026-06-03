@@ -1,0 +1,58 @@
+---
+const { destination, text = "Dive in", variant } = Astro.props
+
+---
+
+<script>
+    
+</script>
+
+<a href={destination} class={variant}>
+    <div>
+        <p>{text}</p>
+    </div>
+</a>
+
+<style>
+    a {
+        display: flex;
+        padding: 0;
+
+        div {
+            display: flex;
+            min-width: fit-content;
+            min-height: fit-content;
+            padding: 14px 20px;
+            border-radius: 20px;
+            background-color: var(--ink);
+        }
+
+        p {
+            line-height: 0.8;
+            font-family: var(--main-font);
+            font-style: italic;
+            font-weight: normal;
+            font-size: 1rem;
+            color: white;
+        }
+    }
+
+    a.overview {
+        div {
+            background-color: transparent;
+            border: none;
+        }
+        
+        p::before {
+            content: url("../assets/icons/four_sided_star_icon.svg");
+            height: 1rem;
+            width: auto;
+        }
+
+        p::after {
+            content: url("../assets/icons/four_sided_star_icon.svg");
+            height: 0.8rem;
+            width: auto;
+        }
+    }
+</style>

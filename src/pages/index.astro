@@ -6,20 +6,31 @@ import Navigation from '../components/Navigation.astro'
 import TarotCard from '../components/tarotCard/TarotCard.astro'
 import TarotCardFront from '../components/tarotCard/TarotCardFront.astro'
 
-const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
-const toRoman = (position) => romanNumerals[position - 1] ?? String(position)
-
-// Source projects from the content collection, ordered by their `order` field.
 const projectEntries = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
+const projectOverviews = (await getCollection("overviews"))
 
-const categoryCount = {} // counts number of cards in category so far
-const projects = projectEntries.map((entry) => {
-  // `category` is a { name: navSortOrder } map; we only need the name for rendering/filtering.
-  const [category] = Object.keys(entry.data.category)
-  categoryCount[category] = (categoryCount[category] ?? 0) + 1 // One more than the category count
-  return { ...entry.data, category, numeral: toRoman(categoryCount[category]) } // flatten category to its name + add numeral
-})
+function getCategory(entry) {
+  return Object.keys(entry.data.category)[0]
+}
+
+function getCardPosition(entry, entries) {
+  const sameCategory = entries.filter(e => getCategory(e) === getCategory(entry))
+  return sameCategory.indexOf(entry) + 1
+}
+
+function toRoman(position) {
+  const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
+  return romanNumerals[position - 1] ?? String(position)
+}
+
+// get new object including numeral and flattened category
+const projects = projectEntries.map((entry) => ({
+  ...entry.data,
+  category: getCategory(entry),
+  numeral: toRoman(getCardPosition(entry, projectEntries))
+}))
 ---
+
   <Base>
     <body>
       <div id="fly-overlay"></div>
@@ -65,11 +76,31 @@ const projects = projectEntries.map((entry) => {
 
 
     <style>
+      @property --bg-1 { syntax: '<color>'; initial-value: #091A1B; inherits: false; }
+      @property --bg-2 { syntax: '<color>'; initial-value: #070F11; inherits: false; }
+      @property --bg-3 { syntax: '<color>'; initial-value: #050A0E; inherits: false; }
+      @property --bg-4 { syntax: '<color>'; initial-value: #03050A; inherits: false; }
+
       body {
         display: flex;
         flex-direction: column;
         overflow-x: clip;
         padding: 0;
+        background: radial-gradient(
+          in oklab
+          ellipse 50vw 130vh at 50vw 90vh,
+          var(--bg-1) 5%,
+          var(--bg-2) 35%,
+          var(--bg-3) 52%,
+          var(--bg-4) 70%) fixed;
+        transition: --bg-1 2s ease, --bg-2 2s ease, --bg-3 2s ease, --bg-4 2s ease;
+      }
+
+      body.darkened {
+        --bg-1: #03070A;
+        --bg-2: #020407;
+        --bg-3: #010204;
+        --bg-4: #000000;
       }
       main {
         display: flex;

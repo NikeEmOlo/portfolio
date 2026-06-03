@@ -21,4 +21,14 @@ const projects = defineCollection({
     }),
 });
 
-export const collections = { projects };
+const overviews = defineCollection({
+    loader: glob({ pattern: "**/*.md", base: "./src/content/overviews" }),
+    schema: ({ image }) => z.object({   
+        projTitle: z.string(),
+        img: image().optional(),        
+        buttonTxt: z.string().default("Dive In"),
+        link: z.string(),
+    }),
+})
+
+export const collections = { projects, overviews };

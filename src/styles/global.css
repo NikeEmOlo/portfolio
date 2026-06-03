@@ -16,11 +16,6 @@
   }
 }
 
-@property --bg-1 { syntax: '<color>'; initial-value: #091A1B; inherits: false; }
-@property --bg-2 { syntax: '<color>'; initial-value: #070F11; inherits: false; }
-@property --bg-3 { syntax: '<color>'; initial-value: #050A0E; inherits: false; }
-@property --bg-4 { syntax: '<color>'; initial-value: #03050A; inherits: false; }
-
 body {
   margin: 0 auto;
   width: 100%;
@@ -28,24 +23,7 @@ body {
   line-height: 1.5; /* 4 */
   -webkit-font-smoothing: antialiased; /* 5 */
   min-height: 100dvh;
-  background: radial-gradient(
-    in oklab
-    ellipse 50vw 130vh at 50vw 90vh,
-    var(--bg-1) 5%,
-    var(--bg-2) 35%,
-    var(--bg-3) 52%,
-    var(--bg-4) 70%) fixed;
-  transition: --bg-1 2s ease, --bg-2 2s ease, --bg-3 2s ease, --bg-4 2s ease;
 }
-
-body.darkened {
-  --bg-1: #03070A;
-  --bg-2: #020407;
-  --bg-3: #010204;
-  --bg-4: #000000;
-}
-
-
 
 /* 6. Improve media defaults */
 img, picture, video, canvas, svg {
@@ -80,8 +58,26 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ----------------------------------------GLOBAL STYLES ---------------------------------------- */
 :root {
+  /* ---------- Brand ---------- */
+  --teal: #359E9D;          /* primary */
+  --teal-light: #7ECECE;
+  --purple: #704898;
+  --orchid: #BE83D3;        /* light purple */
+
+  /* Signature gradient — kept as-is */
   --tarot-gradient: linear-gradient(0.3turn, #359E9D 0%, #704898 42%, #BE83D3 82%, #359E9D 99%);
+
+  /* ---------- Surfaces (near-black → navy) ---------- */
+  /* The animated page-background scale (--bg-1..4) is index-specific and lives in index.astro. */
+  --ink: #080E1C;           /* navy-black: cards / panels */
+  --black: #000000;
+
+  /* ---------- Text ---------- */
+  --text: #CFCFDF;
   --muted-text: #71717A;
+  --white: #ffffff;
+
+  /* ---------- Sizing ---------- */
   --tarot-card-w: clamp(140px, 7.5vw, 260px);
   --tarot-card-h: clamp(235px, 12.5vw, 435px);
   --tarot-card-radius: 8px;
@@ -99,3 +95,10 @@ h1, h2, h3, h4, h5, h6 {
   white-space: nowrap;
   border: 0;
 }
+ 
+ /* ------------------Overviews Global styles --------------- */
+
+ span.standout.overview {
+    font-family: var(--boldonse);
+    font-size: 2rem;
+ }
