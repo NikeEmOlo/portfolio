@@ -4,10 +4,10 @@ const { destination, buttonTxt, variant } = Astro.props
 ---
 
 <script>
-    
+import "./linkButton.js"
 </script>
 
-<a href={destination} class={variant}>
+<a href={destination} class:list={["link-button", variant]} data-variant={variant}>
     <div>
         <p>{buttonTxt}</p>
     </div>

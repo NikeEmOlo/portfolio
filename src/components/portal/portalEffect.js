@@ -5,7 +5,7 @@ const DAB_RADIUS       = 0.06;
 const TURBULENCE       = 0.27;
 // Trail palette — the glow cycles through these (from --tarot-gradient + a blue).
 // teal → blue → purple → pink. Tweak/reorder freely; keep it to 4 colours.
-const TRAIL_COLORS     = ['#359E9D', '#3E6FCF', '#704898', '#BE83D3'];
+const TRAIL_COLORS     = ['#359E9D', '#0558ff', '#ff34ae', '#e190ff'];
 const IRID_FREQUENCY   = 1.5;   // how many times the palette repeats across the text
 const IRID_ANGLE       = 81.0 * (Math.PI / 180);
 const IRID_SPEED       = 0.1;
@@ -21,7 +21,7 @@ const BOKEH_FAR  = { count: 16, size: [0.004, 0.020], opacity: 0.55, core: 0.6 }
 const BOKEH_NEAR = { count: 4,  size: [0.03,  0.10],  opacity: 0.18, core: 0   }; // soft out-of-focus motes in front
 
 // ─── Text layout (easy to tweak) ──────────────────────────────────────────────
-const FONT_CSS_VAR = '--secondary-font'; // Astro font var: --main-font | --secondary-font | --boldonse
+const FONT_CSS_VAR = '--main-font'; // Astro font var: --main-font | --secondary-font | --boldonse
 const FONT_WEIGHT  = 400;           // 400 = regular; raise if the font ships heavier weights
 const TEXT_SIZE    = 4;            // biggest text height as a % of the portal's height (auto-shrinks to fit)
 const LINE_HEIGHT  = 1.2;           // line spacing × font size

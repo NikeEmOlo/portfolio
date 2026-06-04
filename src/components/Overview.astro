@@ -3,7 +3,7 @@ import TarotCardFront from "./tarotCard/TarotCardFront.astro";
 import { Image } from "astro:assets"
 import LinkButton from "./LinkButton.astro"
 import PortalEffect from "./portal/PortalEffect.astro";
-const { title, img, imgClass, buttonTxt, overviewID } = Astro.props;
+const { title, img, imgClass, buttonTxt, overviewID, linkToProj } = Astro.props;
 ---
 
 <div class="overview" data-overview={overviewID}>
@@ -17,7 +17,7 @@ const { title, img, imgClass, buttonTxt, overviewID } = Astro.props;
         <TarotCardFront>
             <PortalEffect />
         </TarotCardFront> 
-        <LinkButton variant="overview" buttonTxt={buttonTxt}/>
+        <LinkButton variant="overview" buttonTxt={buttonTxt} destination={linkToProj}/>
     </div>
 </div>
 

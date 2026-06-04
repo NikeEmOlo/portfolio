@@ -34,8 +34,6 @@
         opacity: 1;
         transition: opacity 1s ease-out;
 
-        /* The z-index is one greater than the hover effect of all card */
-        /* Calculated from the number of project cards */
         z-index: calc(var(--card-count) + 2); 
         pointer-events: none;
     }
@@ -43,4 +41,15 @@
     .tarot-front.show {
         opacity: 1;
     }
+
+    /* Animating the transition between  */
+    .tarot-front.diving {
+        position: fixed;
+        inset: 0;
+        border-radius: 0;
+        z-index: 150;
+        width: 100vw;
+        height: 100dvh;
+    }
+
 </style>
