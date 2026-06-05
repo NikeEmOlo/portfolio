@@ -4,8 +4,8 @@ projTitle: "BetterPoints App Pilot"
 cardTitle: "Delivery Management"
 projType: "case study"
 icon: "crab"
-category: { delivery: 2 }
-overview: {
+category: "delivery"
+projectOverview: {
     Task: "Placeholder",
     Obstacles: "Placeholder",
     Goal: "Placeholder",

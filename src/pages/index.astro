@@ -1,29 +1,15 @@
 ---
-import '../styles/global.css'
-import { getCollection, render } from 'astro:content'
+import { getCollection, getEntry, render } from 'astro:content'
 import Base from '../layouts/Base.astro'
 import Navigation from '../components/Navigation.astro'
 import TarotCard from '../components/tarotCard/TarotCard.astro'
 import Overview from '../components/Overview.astro'
 
 const projectEntries = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
-const projectOverviews = (await getCollection("overviews"))
 
-// Pre-render each overview's markdown body so we can emit one Overview per project.
-const overviews = await Promise.all(
-  projectOverviews.map(async (entry) => ({
-    ...entry.data,
-    id: entry.id,
-    Content: (await render(entry)).Content,
-  }))
-)
-
-function getCategory(entry) {
-  return Object.keys(entry.data.category)[0]
-}
-
+// Position within a category drives the tarot numeral (I, II, III…).
 function getCardPosition(entry, entries) {
-  const sameCategory = entries.filter(e => getCategory(e) === getCategory(entry))
+  const sameCategory = entries.filter((e) => e.data.category === entry.data.category)
   return sameCategory.indexOf(entry) + 1
 }
 
@@ -32,39 +18,39 @@ function toRoman(position) {
   return romanNumerals[position - 1] ?? String(position)
 }
 
-function getOverview(projectID) {
-  return projectOverviews.find((overview) => overview.id === projectID)
-}
-
-// get new object including numeral and flattened category
-const projects = projectEntries.map((entry) => ({
-  id: entry.id,
-  ...entry.data,
-  category: getCategory(entry),
-  numeral: toRoman(getCardPosition(entry, projectEntries)),
-  overview: getOverview(entry.id),
-}))
-
-
+// Follow each project's `overview` reference to its panel entry, pre-rendering that panel's body.
+const projects = await Promise.all(
+  projectEntries.map(async (entry) => {
+    const overviewEntry = entry.data.overview ? await getEntry(entry.data.overview) : null
+    const overview = overviewEntry
+      ? { ...overviewEntry.data, Content: (await render(overviewEntry)).Content }
+      : null
+    return {
+      id: entry.id,
+      ...entry.data,
+      numeral: toRoman(getCardPosition(entry, projectEntries)),
+      overview,
+    }
+  })
+)
 ---
 
   <Base>
-    <body>
       <div id="fly-overlay"></div>
       <main>
         <Navigation />
-        {overviews.map((overview) => {
-          const { Content } = overview
+        {projects.map((project) => {
+          if (!project.overview) return null
+          const { Content } = project.overview
           return (
             <Overview
-              img={overview.img}
-              title={overview.projTitle}
-              buttonTxt={overview.buttonTxt}
-              imgClass={overview.imgClass}
-              overviewID={overview.id}
-              linkToProj={overview.link}>
-              <Content>
-              </Content>
+              img={project.overview.img}
+              title={project.overview.projTitle}
+              buttonTxt={project.overview.buttonTxt}
+              imgClass={project.overview.imgClass}
+              overviewID={project.id}
+              linkToProj={`/${project.id}`}>
+              <Content />
             </Overview>
           )
         })}
@@ -98,7 +84,6 @@ const projects = projectEntries.map((entry) => ({
           <source src="/idle_dark.webm" type="video/webm">
         </video>
       </div>
-    </body>
 
 
     <script>

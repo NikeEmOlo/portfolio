@@ -3,7 +3,6 @@ projTitle: "Automating Unemployment"
 img: ../../assets/openclaw_logo.svg
 imgClass: "openclaw-logo"
 buttonTxt: "Dive In"
-link: "/Content"
 ---
 
 <!-- Overview text -->

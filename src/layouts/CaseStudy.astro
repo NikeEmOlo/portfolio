@@ -1,0 +1,116 @@
+---
+const { title, tabs } = Astro.props
+---
+
+<div class="case-study">
+    <section class="hero">
+        <div class="tab-title-wrap">
+            <h1 class="title">{title}</h1>
+            <div class="tab-wrap">
+                {Object.entries(tabs).map(([key, value]) => (
+                    <button class="tab">{key}</button>
+                ))}
+            </div>
+        </div>
+        <div class="hero-info">
+            {Object.entries(tabs).map(([key, value]) => (
+                <p class="info-snippet hidden">{value}</p>
+            ))}
+        </div>
+    </section>
+    <slot />
+</div>
+
+<style is:global>
+    .case-study {
+        --title-width: 80vw;
+
+        min-width: 100vw;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #9B6FC4;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .tab-title-wrap {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: var(--title-width);
+        }
+
+        .title {
+            font-family: var(--boldonse);
+            font-size: 8vw;
+            text-transform: uppercase;
+            text-align: center;
+            color: var(--text);
+        }
+
+
+        .tab-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            position: absolute;
+            top: auto;
+            left: auto;
+            width: var(--title-width);
+
+
+            .tab {
+                background-color: var(--ink);
+                color: var(--text);
+                border: none;
+                font-family: var(--boldonse);
+                font-size: max(2vw, 20px);
+                height: fit-content;
+                width: fit-content;
+                padding: 4px 2px;
+
+                &:nth-child(1) {
+                    transform: rotate(5deg);
+
+                }
+                
+                &:nth-child(2) {
+                    transform: translateY(3vw) translateX(1vw) rotate(-2deg);
+                }
+                
+                &:nth-child(3) {
+                    transform: translateY(-1vw) rotate(2deg);
+                }
+                
+                &:nth-child(4) {
+                    transform: translateX(5vw) rotate(5deg);
+                }
+
+                &:hover {
+                    background-color: var(--teal);
+                }
+            }
+        }
+
+        .hero-info {
+            display: flex;
+
+            .info-snippet {
+                display: auto;
+            }
+
+            .info-snippet.hidden {
+                display: none;
+            }
+        }
+    }
+</style>

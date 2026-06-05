@@ -2,10 +2,10 @@
 order: 7
 projTitle: "How I built this website"
 cardTitle: "This portfolio"
-projType: "Case Study"
+projType: "case study"
 icon: "crab"
-category: { development: 1 }
-overview: {
+category: "development"
+projectOverview: {
     Task: "Placeholder",
     Obstacles: "Placeholder",
     Goal: "Placeholder",

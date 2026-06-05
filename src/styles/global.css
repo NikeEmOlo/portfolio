@@ -19,7 +19,7 @@
 body {
   margin: 0 auto;
   width: 100%;
-  padding: 1rem;
+  /* padding: 1rem; */
   line-height: 1.5; /* 4 */
   -webkit-font-smoothing: antialiased; /* 5 */
   min-height: 100dvh;

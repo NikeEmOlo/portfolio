@@ -1,16 +1,11 @@
 ---
-import '../styles/global.css'
 import { getCollection } from 'astro:content'
+import { CATEGORIES } from '../categories.js'
 
-// Each project's `category` is a { name: navSortOrder } map; collect the unique
-// categories and order the tabs by that sort value (lowest first).
+// One tab per category that has at least one project, in canonical display order.
 const projectEntries = await getCollection('projects')
-const categorySortOrder = new Map()
-for (const entry of projectEntries) {
-    const [[name, sortOrder]] = Object.entries(entry.data.category)
-    categorySortOrder.set(name, sortOrder)
-}
-const tabs = [...categorySortOrder.keys()].sort((a, b) => categorySortOrder.get(a) - categorySortOrder.get(b))
+const present = new Set(projectEntries.map((entry) => entry.data.category))
+const tabs = CATEGORIES.filter((category) => present.has(category))
 ---
 
 <nav>
