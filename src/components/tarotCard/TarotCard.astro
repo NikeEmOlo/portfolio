@@ -73,6 +73,14 @@ const IconComponent = icons[icon]
         height: 58px;
     }
 
+    /* Let the crab derive its height from its own viewBox rather than a
+       percentage of the parent. On mobile the .icon box is height:auto, so a
+       percentage height on the SVG would collapse to 0 and hide the crab. */
+    .icon :global(svg) {
+        width: 100%;
+        height: auto;
+    }
+
     @media (max-width: 480px) {
         .card-main {
             width: 90px;

@@ -37,30 +37,24 @@ function collapseCards(card) {
 
 function cardFlyIn(card, overview) {
     const panel = overview.querySelector(".tarot-front");
-    const tl = gsap.timeline({ delay: .5, onStart: () => card.style.transition = 'none', onComplete: () => flyToPanel(card, panel, overview) });
-
-    tl.set(card, { transformPerspective: 800, transformOrigin: "50% 30%" })
-        .to(card, {
-            rotationX: 20,
-            duration: 0.5,
-            ease: "power1.out"
-        })
-        .to(card, {
-            scale: tarotCardScale,
-            rotationX: 0,
-            duration: 0.8,
-            ease: "power2.out"
-        }, "-=0.2");
-
     document.body.classList.add('fill-background');
+
+    gsap.set(card, { transformPerspective: 800, transformOrigin: "50% 30%" });
+
+    const tl = gsap.timeline({ delay: .5, onStart: () => { card.style.transition = 'none' } });
+
+    // Quick 3D tilt flourish that ends with momentum, flowing straight into the swoop.
+    tl.to(card, { rotationX: 20, duration: 0.35, ease: "power1.out" })
+        .to(card, { rotationX: 0, duration: 0.35, ease: "power1.in" })
+        .add(() => flyToPanel(card, panel, overview));
 }
 
-// After the flourish, fly the (now panel-sized) card across to where the
-// overview's panel sits, then reveal the overview and hand off to the real panel.
+// Grow the card to panel size while gliding it across to the overview's panel slot —
+// one continuous swoop (no pause at centre) — then reveal the overview and hand off.
 function flyToPanel(card, panel, overview) {
     Flip.fit(card, panel, {
-        duration: 0.8,
-        ease: "power2.inOut",
+        duration: 1.0,
+        ease: "power2.out",
         scale: true,
         onComplete: () => {
             overview.classList.add("show");

@@ -54,7 +54,9 @@ function animateTabSwitch(category) {
                 b.disabled = b.getAttribute('aria-pressed') === 'true'
             })
         }, 1000)
-    }, 1100)
+    // Fire the swap as the outgoing cards finish collapsing (the 0.6s transition),
+    // so they don't sit stacked at centre with a dead pause before fanning back out.
+    }, 600)
 }
 
 navButtons.forEach(button => {
