@@ -13,7 +13,7 @@ export default defineConfig({
   },
   {
       provider: fontProviders.fontsource(),
-      name: "DM Mono",
+      name: "DM Sans",
       cssVariable: "--secondary-font"
   },
   {

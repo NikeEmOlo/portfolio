@@ -1,0 +1,23 @@
+---
+const {class: className } = Astro.props
+---
+<h3 class:list={["section-title", className]}>
+    <slot/>
+</h3>
+
+<style>
+    .section-title {
+        font-family: var(--secondary-font);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+    }
+
+    .section-title.label {
+        background-color: var(--orchid);
+        font-variant: small-caps;
+        font-size: 1rem;
+        font-weight: 900;
+        padding: 0.25em 0.1em;
+        width: fit-content;
+    }
+</style>

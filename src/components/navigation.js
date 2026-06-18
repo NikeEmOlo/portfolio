@@ -1,17 +1,13 @@
-import { resetCards } from "./tarotCard/tarotInteractions.js"
-
 //----------------------- DOM REFERENCES -----------------------//
 const nav = document.querySelector('nav')
 const navButtons = [...document.querySelectorAll('#project-list button')]
 const allCards = [...document.querySelectorAll('.cards-row li[data-category]')]
 const cardsRow = document.querySelector('.cards-row')
 const hamburger = document.querySelector('.hamburger')
-const navCloseBtn = document.querySelector('.close-btn')
 const tabAnnouncement = document.getElementById('tab-announcement')
 
 //----------------------- STATE -----------------------//
 let isAnimating = false
-let tarotOpen = false
 export let currentCategory = null
 
 //----------------------- CARD FILTER -----------------------//
@@ -116,11 +112,3 @@ function updateNavMode() {
 
 new ResizeObserver(updateNavMode).observe(document.documentElement)
 updateNavMode()
-
-//----------------------- TAROT CARD STATE -----------------------//
-navCloseBtn?.addEventListener('click', resetCards)
-
-export function updateNav() {
-    tarotOpen = !tarotOpen
-    nav.classList.toggle('tarot-close', tarotOpen)
-}

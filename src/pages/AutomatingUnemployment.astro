@@ -1,0 +1,188 @@
+---
+import Base from '../layouts/Base.astro'
+import ScrollPrompt from "../components/ScrollPrompt.astro"
+import SectionLabel from "../components/text/SectionLabel.astro"
+---
+
+<Base>
+    <section class="hero">
+        <ScrollPrompt />
+        <SectionLabel class="accent">A Case Study</SectionLabel>
+        <h1 class="title biggest">Automating <span class="base-gradient">Unemployment</span><span class="accent">.</span></h1>
+        <p class="standfirst">At my peak, I was spending <strong>12 hours per day</strong> searching for a job. Here's how I got three agents to do it for me.</p>
+    </section>
+    <section class="problem">
+        <SectionLabel class="accent">The Problem</SectionLabel>
+        <h2 class="title">Do you know how time consuming it is being unemployed?</h2>
+        <div class="stat">
+            <p class="stat-metric"><span class="base-gradient">1.5 to 3</span><span class="stat-units">hrs</span></p>
+            <p class="stat-caption">Just to research, tailor, and submit a <span class="orange">single</span> application</p>
+        </div>
+        <div class="list-wrap" id="exclusions">
+            <SectionLabel class="label">This excludes</SectionLabel>
+            <ul class="horizontal-list">
+                <li>Take home tasks</li>
+                <li>Cognitive and numeric assessments</li>
+                <li>Two or more interviews</li>
+                <li>Travel to interviews</li>
+                <li>Communications</li>
+            </ul>
+        </div>
+    </section>
+</Base>
+
+<style>
+    body {
+        --cream: #f2efe8;
+        --orange: #e8722c;
+        --muted-text: rgba(8, 14, 28, 0.4);
+        --dark-background: #080e1c;
+        /* This is a background attribute */
+        --base-gradient-vert: linear-gradient(100deg, rgb(155, 111, 196), rgb(53, 158, 157)) text;
+        
+        background-color: var(--cream);
+    }
+
+    section {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 2.5em;
+
+        &.hero {
+            justify-content: center;
+            position: relative;
+            
+            min-height: 90dvh;
+            background-color: #f2efe8;
+            padding: 80px 24px 150px 24px;
+
+        }
+
+        &.problem {
+            background-color: var(--dark-background);
+            border-radius: 100vh 100vh 0 0;
+            min-height: 100vh;
+            padding-top: 10vh;
+
+        }
+    }
+
+        
+    h3.section-title {
+        font-family: var(--secondary-font);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+    }
+
+    h1.title {
+        font-family: var(--secondary-font), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 6rem;
+        font-weight: bold;
+        line-height: 0.9;
+        letter-spacing: -0.045em;
+        text-align: center;
+        text-transform: lowercase;
+
+        &.biggest {
+            display: inline;
+            font-weight: 1000;
+            font-size: clamp(54px, 13vw, 190px);
+            margin-bottom: 2rem;
+        }
+    }
+
+    h2.title {
+        font-family: var(--secondary-font);
+        font-size: clamp(30px, 5.2vw, 62px);
+        font-weight: bold;
+        color: white;
+        text-align: center;
+        width: max(50%, 300px);
+        letter-spacing: -0.03em;
+        line-height: 0.9;
+    }
+
+    p {
+        font-family: var(--secondary-font);
+        text-align: center;
+
+        &.standfirst {
+            margin-top: .5rem;
+            width: 50vw;
+            font-weight: 500;
+            color: var(--muted-text);
+        }
+    }
+
+    span {
+        padding: 0;
+        margin: 0;
+    }
+
+    div.stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        width: 75%;
+
+        .stat-metric {
+            font-size: clamp(58px, 11vw, 128px);
+            font-weight: 400;
+            letter-spacing: -0.05em;
+            line-height: 0.8;
+            padding: 0;
+        }
+
+        span.stat-units {
+            font-size: 3rem;
+            letter-spacing: -0.03em;
+            color: rgb(153, 153, 153);
+        }
+
+        .stat-caption {
+            text-transform: uppercase;
+            text-align: left;
+            font-size: 0.875rem;
+            letter-spacing: 0.02;
+            width: max(20%, 250px);
+            color: rgb(153, 153, 153);
+        }
+    }
+
+    .list-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5vh;
+        max-width: 80%;
+
+        .horizontal-list {
+            display: flex;
+            gap: clamp(14px, 5rem, 15vw);
+            justify-content: space-between;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+            font-family: var(--secondary-font);
+            font-weight: 400;
+            color: rgb(153, 153, 153);
+            text-align: center;
+        }
+    }
+
+    @keyframes scroll-cue {
+        0% {
+            transform: translateY(0);
+            opacity: .9;
+        }
+
+        100% {
+            transform: translateY(12px);
+            opacity: .12;
+        }
+    }
+</style>

@@ -1,9 +1,8 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content'
+import { getCollection } from 'astro:content'
 import Base from '../layouts/Base.astro'
 import Navigation from '../components/Navigation.astro'
 import TarotCard from '../components/tarotCard/TarotCard.astro'
-import Overview from '../components/Overview.astro'
 
 const projectEntries = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
 
@@ -18,42 +17,16 @@ function toRoman(position) {
   return romanNumerals[position - 1] ?? String(position)
 }
 
-// Follow each project's `overview` reference to its panel entry, pre-rendering that panel's body.
-const projects = await Promise.all(
-  projectEntries.map(async (entry) => {
-    const overviewEntry = entry.data.overview ? await getEntry(entry.data.overview) : null
-    const overview = overviewEntry
-      ? { ...overviewEntry.data, Content: (await render(overviewEntry)).Content }
-      : null
-    return {
-      id: entry.id,
-      ...entry.data,
-      numeral: toRoman(getCardPosition(entry, projectEntries)),
-      overview,
-    }
-  })
-)
+const projects = projectEntries.map((entry) => ({
+  id: entry.id,
+  ...entry.data,
+  numeral: toRoman(getCardPosition(entry, projectEntries)),
+}))
 ---
 
   <Base>
-      <div id="fly-overlay"></div>
       <main>
         <Navigation />
-        {projects.map((project) => {
-          if (!project.overview) return null
-          const { Content } = project.overview
-          return (
-            <Overview
-              img={project.overview.img}
-              title={project.overview.projTitle}
-              buttonTxt={project.overview.buttonTxt}
-              imgClass={project.overview.imgClass}
-              overviewID={project.id}
-              linkToProj={`/${project.id}`}>
-              <Content />
-            </Overview>
-          )
-        })}
         <section aria-labelledby="projects-heading">
           <h2 id="projects-heading" class="visually-hidden">Projects</h2>
           <ul
@@ -63,7 +36,7 @@ const projects = await Promise.all(
             {projects.map((project, index) => (
               <li
                 data-category={project.category}
-                data-overview={project.id}
+                data-id={project.id}
                 style={`--index: ${index}`}
               >
                 <TarotCard
@@ -221,11 +194,37 @@ const projects = await Promise.all(
         }
       }
 
-      #fly-overlay {
+      /* Flip-to-page transition overlay (built in tarotInteractions.js, appended
+         to <body>, so these rules must be global). */
+      :global(.flip-overlay) {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        pointer-events: none;
+      }
+      :global(.flip-scaler) {
+        perspective: 1600px;
+        will-change: top, left, width, height;
+      }
+      :global(.flip-card) {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+      }
+      :global(.flip-face) {
         position: absolute;
         inset: 0;
-        pointer-events: none;
-        z-index: 1;
+        backface-visibility: hidden;
+        overflow: hidden;
+      }
+      :global(.flip-card .flip-front) {
+        width: 100%;
+        height: 100%;
+      }
+      :global(.flip-back) {
+        background-color: var(--overview-bg);
+        transform: rotateY(180deg);
       }
 
       .character-wrapper {

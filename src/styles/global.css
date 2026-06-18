@@ -62,7 +62,12 @@ h1, h2, h3, h4, h5, h6 {
   --teal: #359E9D;          /* primary */
   --teal-light: #7ECECE;
   --purple: #704898;
-  --orchid: #BE83D3;        /* light purple */
+  --orchid: #BE83D3;
+  --cream: #f2efe8;
+  --orange: #e8722c;
+  --muted-text: rgba(8, 14, 28, 0.4);
+  --dark-background: #080e1c;
+  /* light purple */
 
   /* Signature gradient — kept as-is */
   --tarot-gradient: linear-gradient(0.3turn, #359E9D 0%, #704898 42%, #BE83D3 82%, #359E9D 99%);
@@ -98,6 +103,17 @@ h1, h2, h3, h4, h5, h6 {
   white-space: nowrap;
   border: 0;
 }
+
+
+.accent {
+    color: var(--orange);
+}
+
+.base-gradient {
+    background: var(--tarot-gradient);
+    background-clip: text;
+    color: transparent;
+}
  
  /* ------------------Overviews Global styles --------------- */
 
@@ -107,3 +123,5 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--boldonse);
     font-size: 2rem;
  }
+
+
