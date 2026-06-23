@@ -1,7 +1,7 @@
 ---
-const {class: className } = Astro.props
+const {class: className, id } = Astro.props
 ---
-<h3 class:list={["section-title", className]}>
+<h3 class:list={["section-title", className]} id={id}>
     <slot/>
 </h3>
 
@@ -19,5 +19,9 @@ const {class: className } = Astro.props
         font-weight: 900;
         padding: 0.25em 0.1em;
         width: fit-content;
+    }
+
+    #this-excludes {
+        align-self: flex-start;
     }
 </style>

@@ -13,13 +13,13 @@ import SectionLabel from "../components/text/SectionLabel.astro"
     </section>
     <section class="problem">
         <SectionLabel class="accent">The Problem</SectionLabel>
-        <h2 class="title">Do you know how time consuming it is being unemployed?</h2>
+        <h2 class="title" id="problem-title">Do you know how time consuming it is being unemployed?</h2>
         <div class="stat">
             <p class="stat-metric"><span class="base-gradient">1.5 to 3</span><span class="stat-units">hrs</span></p>
             <p class="stat-caption">Just to research, tailor, and submit a <span class="orange">single</span> application</p>
         </div>
         <div class="list-wrap" id="exclusions">
-            <SectionLabel class="label">This excludes</SectionLabel>
+            <SectionLabel class="label" id="this-excludes">This excludes</SectionLabel>
             <ul class="horizontal-list">
                 <li>Take home tasks</li>
                 <li>Cognitive and numeric assessments</li>
@@ -48,11 +48,12 @@ import SectionLabel from "../components/text/SectionLabel.astro"
         width: 100%;
         flex-direction: column;
         align-items: center;
-        gap: 2.5em;
+
 
         &.hero {
             justify-content: center;
             position: relative;
+            gap: 2.5em;
             
             min-height: 90dvh;
             background-color: #f2efe8;
@@ -65,6 +66,7 @@ import SectionLabel from "../components/text/SectionLabel.astro"
             border-radius: 100vh 100vh 0 0;
             min-height: 100vh;
             padding-top: 10vh;
+            gap: 5em;
 
         }
     }
@@ -102,7 +104,12 @@ import SectionLabel from "../components/text/SectionLabel.astro"
         width: max(50%, 300px);
         letter-spacing: -0.03em;
         line-height: 0.9;
+
+        &#problem-title {
+            margin-bottom: 15vh;
+        }
     }
+
 
     p {
         font-family: var(--secondary-font);
@@ -163,6 +170,7 @@ import SectionLabel from "../components/text/SectionLabel.astro"
             gap: clamp(14px, 5rem, 15vw);
             justify-content: space-between;
             padding: 0;
+            flex-wrap: wrap;
         }
 
         li {
@@ -171,6 +179,13 @@ import SectionLabel from "../components/text/SectionLabel.astro"
             font-weight: 400;
             color: rgb(153, 153, 153);
             text-align: center;
+            white-space: nowrap;
+        }
+
+        li::before {
+            content: url(../assets/icons/star_splash.svg);
+            margin-right: 0.8em;
+            vertical-align: middle;
         }
     }
 
