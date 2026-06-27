@@ -130,9 +130,11 @@ import SectionLabel from "../components/text/SectionLabel.astro"
 
     div.stat {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: flex-end;
-        width: 75%;
+        gap: 1.5rem;
+        width: max-content;
+        max-width: 90%;
 
         .stat-metric {
             font-size: clamp(58px, 11vw, 128px);
@@ -167,8 +169,8 @@ import SectionLabel from "../components/text/SectionLabel.astro"
 
         .horizontal-list {
             display: flex;
-            gap: clamp(14px, 5rem, 15vw);
-            justify-content: space-between;
+            gap: clamp(1.5rem, 4vw, 4rem);
+            justify-content: center;
             padding: 0;
             flex-wrap: wrap;
         }
@@ -176,8 +178,9 @@ import SectionLabel from "../components/text/SectionLabel.astro"
         li {
             list-style: none;
             font-family: var(--secondary-font);
-            font-weight: 400;
-            color: rgb(153, 153, 153);
+            font-size: clamp(18px, 2vw, 28px);
+            font-weight: 500;
+            color: var(--cream);
             text-align: center;
             white-space: nowrap;
         }
