@@ -1,12 +1,12 @@
 ---
-const { lines = [] } = Astro.props
+const { lines = [], size, fontSize } = Astro.props
 ---
 
 <script>
-import "./heroTextAnimation.js"
+import "./animatedHeroText.js"
 </script>
 
-<div class="hero-text">
+<div class:list={["hero-text", size]} style={fontSize ? `--hero-font-size: ${fontSize}` : undefined}>
     {lines.map((line) => (
         <p class="hero-line">
             <span class="static">{line.static}</span>
@@ -21,9 +21,21 @@ import "./heroTextAnimation.js"
         flex-direction: column;
         font-family: var(--secondary-font);
         font-weight: 700;
-        font-size: clamp(2.5rem, 7vw, 7rem);
+        font-size: var(--hero-font-size, clamp(2.5rem, 7vw, 7rem));
         line-height: 1.05;
         color: #181614;
+    }
+
+    .hero-text.small {
+        --hero-font-size: clamp(1.5rem, 3vw, 2.5rem);
+    }
+
+    .hero-text.medium {
+        --hero-font-size: clamp(2.5rem, 5vw, 4.5rem);
+    }
+
+    .hero-text.large {
+        --hero-font-size: clamp(3.5rem, 8vw, 8rem);
     }
 
     .hero-line {
@@ -44,10 +56,10 @@ import "./heroTextAnimation.js"
         white-space: nowrap;
     }
 
-    .letter {
+    .hero-text :global(.letter) {
         display: inline-block;
         white-space: pre;
-        overflow: hidden;
+        overflow: clip;
         filter: blur(0px);
         will-change: width, filter, opacity;
     }

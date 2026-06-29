@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
-import HeroTextAnimation from '../components/HeroTextAnimation.astro'
+import AnimatedHeroText from '../components/text/AnimatedHeroText.astro'
+import SubtitleTextAnimation from '../components/text/SubtitleTextAnimation.astro'
 import PageHeader from '../components/PageHeader.astro'
 import Marquee from '../components/Marquee.astro'
 
@@ -26,7 +27,7 @@ const images = [
     <PageHeader pageTitle="Automating Unemployment." />
     <main class="main-wrapper">
         <section class="hero has-margins">
-            <HeroTextAnimation lines={[
+            <AnimatedHeroText lines={[
                 { static: "building", words: ["systems", "AI agents", "pipelines"] },
                 { static: "with", words: ["Openclaw", "Anthropic", "Python"] },
                 { static: "to", words: ["reclaim time", "improve outcomes", "learn"] },
@@ -34,6 +35,39 @@ const images = [
         </section>
         <section class="gallery">
             <Marquee images={images}/>
+        </section>
+        <section class="about-project has-margins">
+            <div class="about-project-text-grid">
+                <div class="col-1">
+                    <SubtitleTextAnimation size="large" words={["12 hours, poorly spent"]} />
+                    <div class="text-content">
+                        <p id="chin-strap">
+                            Do you know how time consuming it is to be unemployed? <strong>I do.</strong>
+                        </p>
+                        <p>
+                            At my peak, I was spending 12 hours per day searching and applying for jobs. 
+                            I'd start at 9AM (you don't want to get too used to the lifestyle) and sift through hundreds, yes, hundreds of listings on job boards. By 9PM I would have applied for just a couple of roles.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="text-content">
+                        <p>
+                            As a career changer who is studying to move into a different field, I had two options. I could finish studying then apply for jobs.
+                            This is the clear, sensible route, providing you don't need to pay bills or eat food. 
+                            Alternatively, I could apply for jobs and study at the same time. 
+                            Although slower into the desired career path, this option has the considerable upside of keeping my partner happy and the possibility of learning on the job.
+                        </p>
+                        <p>
+                            I went with the latter... and quickly found out that this option only works if job-hunting and studying can co-exist. Well, not in this climate.
+                        </p>
+                        <p>
+                            The 12 hours I spent job hunting were 12 hours I wasn't spending on learning and development.
+                            It made every rejection letter that bit more painful. I felt stuck.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 </Base>
@@ -55,7 +89,58 @@ const images = [
         background-color: #1b1917;
     }
 
+    section.about-project {
+        display: flex;
+        flex-direction: column;
+        gap: 8rem;
+
+        .about-project-text-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: 5vw;
+            align-items: stretch;
+        }
+
+        .col-1,
+        .col-2 {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* subtitle on top, body pushed to the bottom edge */
+        .col-1 {
+            justify-content: space-between;
+            gap: 3rem;
+        }
+
+        /* body pushed to the bottom edge so it lines up with col-1 */
+        .col-2 {
+            justify-content: flex-end;
+        }
+
+        .text-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            font-family: var(--figtree);
+            font-weight: 100;
+            color: #181614;
+        }
+
+        .col-1 .text-content {
+            font-size: 1.25rem;
+        }
+
+        .col-2 .text-content {
+            font-size: 1.125rem;
+        }
+
+        strong {
+            font-weight: 900;
+        }
+    }
+
     .has-margins {
-        padding: 0 5%;
+        padding: 8% 5%;
     }
 </style>

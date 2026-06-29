@@ -1,0 +1,55 @@
+---
+const { words = [], size, fontSize } = Astro.props
+---
+
+<script>
+import "./subtitleTextAnimation.js"
+</script>
+
+<div class:list={["subtitle-text", size]} style={fontSize ? `--subtitle-font-size: ${fontSize}` : undefined}>
+    <p class="subtitle-line"><span class="bracket"><span class="paren">(</span><span class="word" data-words={JSON.stringify(words)}>{words[0]}</span><span class="paren">)</span></span></p>
+</div>
+
+<style>
+    .subtitle-text {
+        display: flex;
+        font-family: var(--secondary-font);
+        font-weight: 700;
+        font-size: var(--subtitle-font-size, clamp(1.5rem, 4vw, 3rem));
+        line-height: 1.05;
+        color: #181614;
+    }
+
+    .subtitle-text.small {
+        --subtitle-font-size: clamp(1rem, 2vw, 1.5rem);
+    }
+
+    .subtitle-text.medium {
+        --subtitle-font-size: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    .subtitle-text.large {
+        --subtitle-font-size: clamp(2.5rem, 6vw, 5rem);
+    }
+
+    .subtitle-line {
+        margin: 0;
+    }
+
+    .bracket {
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+    .word {
+        display: inline;
+    }
+
+    .subtitle-text :global(.letter) {
+        display: inline-block;
+        white-space: pre;
+        overflow: clip;
+        filter: blur(0px);
+        will-change: width, filter, opacity;
+    }
+</style>

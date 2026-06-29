@@ -25,6 +25,11 @@ export default defineConfig({
     provider: fontProviders.fontsource(),
     name: "Inter",
     cssVariable: "--inter"
+  },
+  {
+    provider: fontProviders.fontsource(),
+    name: "Figtree",
+    cssVariable: "--figtree"
   }],
 
   integrations: [mdx()]

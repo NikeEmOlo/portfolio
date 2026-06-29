@@ -18,10 +18,14 @@ const { images = [] } = Astro.props
 
 <style>
     .carousel {
+        --image-gap: clamp(1.5rem, 3vw, 3rem);
+
         display: flex;
+        align-items: center;
+        box-sizing: border-box;
         background: #1b1917;
         min-width: 100%;
-        padding: 2rem;
+        padding: var(--image-gap);
 
         overflow-x: auto;
         scrollbar-width: none;
@@ -34,16 +38,16 @@ const { images = [] } = Astro.props
 
     .group {
         display: flex;
-        gap: 2rem;
-        padding-right: 2rem;
+        align-items: center;
+        gap: var(--image-gap);
+        padding-right: var(--image-gap);
         animation: spin 30s infinite linear;
     }
 
     .image {
-        flex: 0 0 auto;
-        width: 500px;
+        flex: none;
+        width: clamp(300px, 40vw, 700px);
         height: auto;
-        object-fit: cover;
     }
 
     @keyframes spin {
