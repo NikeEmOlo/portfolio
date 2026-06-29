@@ -1,0 +1,46 @@
+---
+const { lines = [] } = Astro.props
+---
+
+<script>
+import "./heroTextAnimation.js"
+</script>
+
+<div class="hero-text">
+    {lines.map((line) => (
+        <p class="hero-line">
+            <span class="static">{line.static}</span>
+            <span class="bracket">(<span class="word" data-words={JSON.stringify(line.words)}>{line.words[0]}</span>)</span>
+        </p>
+    ))}
+</div>
+
+<style>
+    .hero-text {
+        display: flex;
+        flex-direction: column;
+        font-family: var(--secondary-font);
+        font-weight: 700;
+        font-size: clamp(2.5rem, 9vw, 7rem);
+        line-height: 1.05;
+        color: #181614;
+    }
+
+    .hero-line {
+        margin: 0;
+        display: flex;
+        align-items: baseline;
+        gap: 0.25em;
+        white-space: nowrap;
+    }
+
+    .bracket {
+        display: inline-flex;
+    }
+
+    .word {
+        display: inline-block;
+        white-space: nowrap;
+        will-change: transform, filter, opacity;
+    }
+</style>
