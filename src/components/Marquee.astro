@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets'
+const { images = [] } = Astro.props
+---
+
+<div class="carousel">
+    <div class="group">
+        {images.map((image) => (
+            <Image src={image.src} alt={image.alt} class="image" />
+        ))}
+    </div>
+    <div class="group" aria-hidden="true">
+        {images.map((image) => (
+            <Image src={image.src} alt={image.alt} class="image" />
+        ))}
+    </div>
+</div>
+
+<style>
+    .carousel {
+        display: flex;
+        background: #1b1917;
+        min-width: 100%;
+        padding: 2rem;
+
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .carousel::-webkit-scrollbar {
+        display: none;
+    }
+
+    .group {
+        display: flex;
+        gap: 2rem;
+        padding-right: 2rem;
+        animation: spin 30s infinite linear;
+    }
+
+    .image {
+        flex: 0 0 auto;
+        width: 500px;
+        height: auto;
+        object-fit: cover;
+    }
+
+    @keyframes spin {
+        from {translate: 0;}
+        to {translate: -100%;}
+    }
+    
+</style>

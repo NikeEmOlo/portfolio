@@ -2,12 +2,30 @@
 import Base from '../layouts/Base.astro'
 import HeroTextAnimation from '../components/HeroTextAnimation.astro'
 import PageHeader from '../components/PageHeader.astro'
+import Marquee from '../components/Marquee.astro'
+
+import img1 from '../assets/gallery/automatingUnemployment/placeholder_project_img.jpg'
+import img2 from '../assets/gallery/automatingUnemployment/placeholder_project_img copy.jpg'
+import img3 from '../assets/gallery/automatingUnemployment/placeholder_project_img copy 2.jpg'
+import img4 from '../assets/gallery/automatingUnemployment/placeholder_project_img copy 3.jpg'
+import img5 from '../assets/gallery/automatingUnemployment/placeholder_project_img copy 4.jpg'
+import img6 from '../assets/gallery/automatingUnemployment/placeholder_project_img copy 5.jpg'
+
+const images = [
+    { src: img1, alt: "placeholder 1" },
+    { src: img2, alt: "placeholder 2" },
+    { src: img3, alt: "placeholder 3" },
+    { src: img4, alt: "placeholder 4" },
+    { src: img5, alt: "placeholder 5" },
+    { src: img6, alt: "placeholder 6" },
+]
+
 ---
 
 <Base>
     <PageHeader pageTitle="Automating Unemployment." />
     <main class="main-wrapper">
-        <section class="hero">
+        <section class="hero has-margins">
             <HeroTextAnimation lines={[
                 { static: "building", words: ["systems", "AI agents", "pipelines"] },
                 { static: "with", words: ["Openclaw", "Anthropic", "Python"] },
@@ -15,7 +33,7 @@ import PageHeader from '../components/PageHeader.astro'
             ]} />
         </section>
         <section class="gallery">
-            
+            <Marquee images={images}/>
         </section>
     </main>
 </Base>
@@ -23,7 +41,6 @@ import PageHeader from '../components/PageHeader.astro'
 <style>
     .main-wrapper {
         width: 100vw;
-        padding: 0 5%;
     }
 
     section.hero {
@@ -36,5 +53,9 @@ import PageHeader from '../components/PageHeader.astro'
 
     section.gallery {
         background-color: #1b1917;
+    }
+
+    .has-margins {
+        padding: 0 5%;
     }
 </style>
