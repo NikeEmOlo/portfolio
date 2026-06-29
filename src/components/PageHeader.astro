@@ -1,0 +1,40 @@
+---
+const { pageTitle } = Astro.props
+---
+
+<div class="header-wrapper">
+    <h2 class="page-title">{pageTitle}</h2>
+</div>
+
+<style>
+    .header-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        min-width: 100%;
+        min-height: 4rem;
+        padding: 0 5%;
+        z-index: 100;
+    }
+
+    .header-wrapper::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        mask-image: linear-gradient(to bottom, black, transparent);
+        -webkit-mask-image: linear-gradient(to bottom, black, transparent);
+    }
+
+    h2 {
+        font-family: var(--inter);
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+</style>

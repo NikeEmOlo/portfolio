@@ -21,7 +21,7 @@ import "./heroTextAnimation.js"
         flex-direction: column;
         font-family: var(--secondary-font);
         font-weight: 700;
-        font-size: clamp(2.5rem, 9vw, 7rem);
+        font-size: clamp(2.5rem, 7vw, 7rem);
         line-height: 1.05;
         color: #181614;
     }
@@ -35,12 +35,20 @@ import "./heroTextAnimation.js"
     }
 
     .bracket {
-        display: inline-flex;
+        display: inline-block;
+        white-space: nowrap;
     }
 
     .word {
         display: inline-block;
         white-space: nowrap;
-        will-change: transform, filter, opacity;
+    }
+
+    .letter {
+        display: inline-block;
+        white-space: pre;
+        overflow: hidden;
+        filter: blur(0px);
+        will-change: width, filter, opacity;
     }
 </style>

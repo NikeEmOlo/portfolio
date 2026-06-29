@@ -1,16 +1,21 @@
 ---
 import Base from '../layouts/Base.astro'
 import HeroTextAnimation from '../components/HeroTextAnimation.astro'
+import PageHeader from '../components/PageHeader.astro'
 ---
 
 <Base>
+    <PageHeader pageTitle="Automating Unemployment." />
     <main class="main-wrapper">
         <section class="hero">
             <HeroTextAnimation lines={[
-                { static: "designing", words: ["style guides", "design systems", "components"] },
-                { static: "for",       words: ["humans", "teams", "clarity"] },
-                { static: "with",      words: ["intention", "care", "code"] },
+                { static: "building", words: ["systems", "AI agents", "pipelines"] },
+                { static: "with", words: ["Openclaw", "Anthropic", "Python"] },
+                { static: "to", words: ["reclaim time", "improve outcomes", "learn"] },
             ]} />
+        </section>
+        <section class="gallery">
+            
         </section>
     </main>
 </Base>
@@ -18,12 +23,18 @@ import HeroTextAnimation from '../components/HeroTextAnimation.astro'
 <style>
     .main-wrapper {
         width: 100vw;
-        padding: 5%;
+        padding: 0 5%;
     }
 
     section.hero {
         display: flex;
         flex-direction: column;
+        justify-content: center;
         width: 100%;
+        min-height: 100vh;
+    }
+
+    section.gallery {
+        background-color: #1b1917;
     }
 </style>

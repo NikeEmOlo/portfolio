@@ -20,6 +20,11 @@ export default defineConfig({
       provider: fontProviders.fontsource(),
       name: "Boldonse",
       cssVariable: "--boldonse"
+  },
+  {
+    provider: fontProviders.fontsource(),
+    name: "Inter",
+    cssVariable: "--inter"
   }],
 
   integrations: [mdx()]
